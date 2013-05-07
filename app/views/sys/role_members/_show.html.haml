@@ -1,0 +1,7 @@
+.role_box{:id=>['role',role.id]}
+  %div
+    %span.title= role.name
+    = link_to '修改', edit_sys_project_role_member_path(@project,role), :remote => true, 'data-replace' => "role_#{role.id}"
+  .user_names
+    - role.users_in_project(@project).each do |user|
+      %div= user.name

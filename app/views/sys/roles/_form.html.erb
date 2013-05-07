@@ -1,0 +1,15 @@
+<%= form_for(@role) do |f| %>
+  <%= render 'application/error_messages', :model => @role %>
+
+  <div class="field">
+    <%= f.label '名称' %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label '描述' %><br />
+    <%= f.text_field :description %>
+  </div>
+  <div class="actions">
+    <%= f.submit '保存' %>
+  </div>
+<% end %>

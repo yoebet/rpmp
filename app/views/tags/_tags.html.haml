@@ -1,0 +1,6 @@
+#tags_box{:style=>"display:#{resource.tags.any? ? 'block':'none'}"}
+  %span.title 标签 &nbsp;&nbsp;
+  - unless resource.respond_to?(:tags_count) and (resource.tags_count.nil? or resource.tags_count.zero?)
+    - resource.tags.each do |tag|
+      = tag.name
+      &nbsp;&nbsp;

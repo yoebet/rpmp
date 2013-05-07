@@ -1,0 +1,30 @@
+%h3 公告
+
+%table.list-table
+  %tr
+    %th 标题
+    %th 发布人
+    %th 发布日
+    %th 过期日
+    %th 状态
+    %th 当前
+    %th 备注
+    %th
+
+  - @announcements.each do |m|
+    %tr
+      %td= m.title
+      %td= m.post_by.name
+      %td= m.inscribe_date
+      %td= m.expire_on
+      %td= m.status_name
+      %td= m.current ? '是':''
+      %td= m.memo
+      %td
+        = link_to '预览', resource_path(m)
+        = link_to '修改', edit_resource_path(m)
+        = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete
+= will_paginate @announcements
+
+%br
+= link_to '增加', new_resource_path

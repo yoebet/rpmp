@@ -1,0 +1,61 @@
+= form_for @requirement, :url => @requirement.new_record? ? collection_path : resource_path(@requirement), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @requirement
+  %table
+    %tr
+      %td 提出人
+      %td= f.select :raised_by_user, customers_and_members_option_groups(@project.customers,@project.users,@requirement.raised_by_user), { :include_blank => true }
+    %tr
+      %td 提出日期
+      %td= render 'application/date-popup', :field => 'raised_on', :f => f
+    %tr
+      %td 重要性
+      %td= f.select :importance, Requirement::IMPORTANCE
+    %tr
+      %td 概要
+      %td= f.text_field :abstract
+    %tr
+      %td 需求内容
+      %td= f.text_area :content, :rows => 5
+    %tr
+      %td 系统模块:
+      %td= f.collection_select :modu_id, @project.modus, :id, :name, :include_blank => true
+    %tr
+      %td 客户沟通
+      %td
+        %ul
+          - ids=@requirement.communications.map &:id
+          - #ids=@requirement.communication_ids
+          - list=associated_resources_for_edit(:communication,@requirement.communications)
+          - list.each do |comm|
+            %li
+              = check_box_tag 'communication_ids[]', comm.id, ids.include?(comm.id), :id => "communication_#{comm.id}"
+              = label_tag "communication_#{comm.id}", comm.abstract
+              = link_to '详情', project_communication_path(@project,comm)
+    %tr
+      %td 原始需求
+      %td= f.check_box :original
+    %tr
+      %td 备注
+      %td= f.text_area :memo, :rows => 2
+    - unless @requirement.new_record? 
+      %tr
+        %td 已确认
+        %td{:id=>'confirmed'}
+          = @requirement.confirmed ? '是' : '否'
+          - if not @requirement.confirmed and @cu.pm?(@project)
+            = link_to '主管确认', project_requirement_path(@project,@requirement)+'/pm_confirm', :method => :post, :remote => true
+    - unless @requirement.new_record?
+      %tr
+        %td 状态
+        %td= f.select :status, Requirement::STATUS
+    %tr
+      %td 附件
+      %td
+        - unless @requirement.new_record?
+          = render 'attachments/attachments', :can_delete => true
+        = render 'attachments/new_attachments'
+    %tr
+      %td 标签
+      %td= text_field_tag :tags, (resource.tags.map &:name).join(' '), :size => 30
+  .actions
+    = f.submit '保存'

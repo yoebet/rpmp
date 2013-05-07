@@ -1,0 +1,47 @@
+%h3 回归测试
+
+= form_for @issue, :url => @issue.new_record? ? collection_path : resource_path(@issue), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @issue
+  %table
+    = render 'show_basic'
+
+    %tr
+      %td 附件
+      %td
+        = render 'attachments/attachments'
+        = render 'attachments/new_attachments', :attachment_tag => 'regress'
+    %tr
+      %td 解决人:
+      %td= @issue.solved_by.name if @issue.solved_by
+    %tr
+      %td 问题原因:
+      %td= @issue.cause
+    %tr
+      %td 解决方案:
+      %td
+        - unless @issue.solution.blank?
+          %pre= @issue.solution
+    - if @issue.solved?
+      %tr
+        %td 解决时间:
+        %td= @issue.solved_at.datetime_ydyn if @issue.solved_at
+    %tr
+      %td 测试人:
+      %td= @cu.name
+    %tr
+      %td 测试备注
+      %td= f.text_area :test_memo, :rows => 3
+    %tr
+      %td 测试通过
+      %td
+        = hidden_field_tag 'form_source','regress'
+        = check_box_tag 'issue_test_passed','1',@issue.closed?
+        = label_tag 'issue_test_passed','测试通过'
+  %br
+  .actions
+    = f.submit '保存'
+
+
+= link_to '详细', resource_path(@issue), remote_options
+\|
+= link_to '返回', collection_path, remote_options

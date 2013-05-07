@@ -1,0 +1,9 @@
+%h3= link_to @project.name, sys_project_path(@project)
+#roles
+  - @project.roles.each do |role|
+    = render 'show', :role =>  role
+  #new_role
+.role_member_op
+  = link_to '返回', sys_projects_path
+  \|
+  = link_to '增加角色', new_sys_project_role_member_path(@project), :remote => true, 'data-replace' => 'new_role'

@@ -1,0 +1,8 @@
+#department_users
+  %h4
+    部门-人员
+  - Sys::Department.all.each do |dep|
+    .title= dep.name
+    %ul
+      - dep.users.each do |user|
+        %li= user.name

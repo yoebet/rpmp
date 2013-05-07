@@ -1,0 +1,8 @@
+- message=mr.message
+%li{:id=>"rm#{message.id}"}
+  = message.created_at.datetime_dyn
+  = message.sender.name
+  %span{:class => mr.read ? '':"un_read_message"}<
+    = link_to_function message_title_safe(message), "read_message(#{message.id})"
+  - if mr.replied
+    %span.replied_tip （已回复）

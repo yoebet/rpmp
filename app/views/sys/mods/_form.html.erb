@@ -1,0 +1,23 @@
+<%= form_for(@mod) do |f| %>
+  <%= render 'application/error_messages', :model => @mod %>
+
+  <div class="field sys-mods">
+    <%= f.label :code, '代码' %><br />
+    <%= f.text_field :code %>
+  </div>
+  <div class="field">
+    <%= f.label :name, '名称' %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :description, '描述' %><br />
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :def_included, '默认包含' %><br />
+    <%= f.check_box :def_included %>
+  </div>
+  <div class="actions">
+    <%= f.submit '保存' %>
+  </div>
+<% end %>

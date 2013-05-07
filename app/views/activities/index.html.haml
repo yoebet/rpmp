@@ -1,0 +1,56 @@
+%h3 项目动态
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    成员
+    - if @project
+      = select_tag 'user_id', options_from_collection_for_select(@project? @project.users.in_department : Sys::User.in_department, 'id', 'name', @filter['user_id']), :include_blank => true
+    - else
+      = select_tag 'user_id', option_groups_from_collection_for_select(Sys::Department.all, 'users', 'name', 'id', 'name', @filter['user_id']), :include_blank => true
+    操作
+    = select_tag 'activity_action', options_for_select(Activity::FILTER_ACTION_MAP,@filter['activity_action']), :include_blank => true
+    资源
+    = select_tag 'subject_type', options_for_select(Activity::FILTER_SUBJECT_MAP,@filter['subject_type']), :include_blank => true
+    .actions
+      = submit_tag '筛选'
+
+- mod_map=Sys::Mod.all.inject({}) {|map,mod|map[mod.code]=mod.name;map}
+- mod_map2={'attachment'=>'附件','release'=>'版本'}
+- abstract_map={'release'=>lambda {|m|m.subject.version},
+  'task'=>lambda {|m|task=m.subject;"#{task.abstract}（#{task.recipient.name}）"},
+  'weekly'=>lambda {|m|"（#{m.subject.registrar.name}）"}, 'customer'=>lambda {|m|m.subject.name} }
+- action_combine_map=Activity::ACTION_COMBINED_MAP
+- action_map=Activity::ACTION_MAP
+
+%ul
+  - @activities.each do |m|
+    %li{:id=>"a#{m.id}"}
+      = m.created_at.datetime_dyn
+      - if @project.nil?
+        - proj_path=begin send("project_#{m.subject_type.downcase.pluralize}_path",m.project) rescue project_path(m.project) end
+        %span{:title=>m.project.name}= link_to m.project.code,proj_path
+      = m.user.name
+      - pn=m.subject_type.downcase
+      - if m.action[/_attachment/]
+        - if m.action=='add_attachment'
+          提交了附件
+        - elsif m.action=='del_attachment'
+          删除了附件
+      -else
+        = (action_combine_map["#{pn}:#{m.action}"]||action_map[m.action])+'了'
+      - abstract=(m.action=='deleted')? m.abstract : nil
+      - abstract ||= abstract_map[pn].call(m) if not m.subject.nil? and abstract_map[pn]
+      - abstract ||= (not m.subject.nil? and m.subject.respond_to?(:abstract))? m.subject.abstract : m.subject.name
+      - subject_name=mod_map[pn]||mod_map2[pn]
+      - subject_info = "#{subject_name}：#{abstract}"
+      - if pn=='modu'
+        - link = "#{project_path(m.project)}/#{m.subject_type.downcase.pluralize}"
+      - else
+        - link = "#{project_path(m.project)}/#{m.subject_type.downcase.pluralize}/#{m.subject_id}"
+      = link_to_unless m.action=='deleted',subject_info, link
+      -if pn=='task' and m.action=='ranked'
+        - task=m.subject
+        %span{:class=>css_class_by_work_rank(task.work_rank), :title=>task.rank_memo}= task.work_rank_name
+
+= will_paginate @activities
+%br

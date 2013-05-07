@@ -1,0 +1,80 @@
+%h3 问题
+
+%table.columns
+  = render 'show_basic'
+
+  %tr
+    %td 附件
+    %td= render 'attachments/attachments'
+  %tr
+    %td 状态:
+    %td{:class => css_class_by_status(@issue.status)}= @issue.status_name
+  -if @issue.solved_by
+    %tr
+      %td 解决人:
+      %td= @issue.solved_by.name
+  -if @issue.solved? or @issue.cause or @issue.solution
+    %tr
+      %td 问题原因:
+      %td= @issue.cause
+    %tr
+      %td 解决方案:
+      %td
+        - unless @issue.solution.blank?
+          %pre= @issue.solution
+  - if @issue.solved?
+    %tr
+      %td 解决时间:
+      %td= @issue.solved_at.datetime_ydyn if @issue.solved_at
+  -if @issue.test_by
+    %tr
+      %td 回归测试:
+      %td= @issue.test_by.name
+    %tr
+      %td 测试备注:
+      %td= @issue.test_memo
+  - if @issue.closed?
+    %tr
+      %td 关闭人:
+      %td= @issue.closed_by.name if @issue.closed_by
+    %tr
+      %td 关闭时间:
+      %td= @issue.closed_at.datetime_ydyn if @issue.closed_at
+  %tr
+    %td 指派任务
+    %td
+      - assigned_tasks=@issue.assigned_tasks
+      - if assigned_tasks.size > 0
+        %ul
+          - assigned_tasks.each do |at|
+            %li= link_to "#{at.abstract}（#{at.recipient.name}）", project_task_path(@project,at)
+      - elsif !@issue.solved?
+        = link_to '指派 =>', new_project_task_path(@project, :issue_id => @issue.id)
+
+%br
+= render 'tags/tags'
+
+%br
+= render 'comments/comments'
+
+%br
+= link_to history_project_issue_path(@project,@issue), resource_history_link_options do
+  .title 历史...
+#resource_history
+
+%br
+- if not @issue.confirmed or @cu.pm?(@project)
+  = link_to '修改', edit_resource_path(@issue), remote_options
+  \|
+- if @issue.unclosed?
+  = link_to '解决', solve_project_issue_path(@project,@issue), remote_options
+  \|
+- if @issue.solved? and (@issue.unclosed? or (@issue.closed_at and @issue.closed_at >= 1.day.ago))
+  = link_to '回归测试', regress_project_issue_path(@project,@issue), remote_options
+  \|
+- if @issue.closed? and (@issue.closed_at and @issue.closed_at < 1.day.ago)
+  = link_to '重新打开', reopen_project_issue_path(@project,@issue), remote_options
+  \|
+= link_to_function '评论', 'new_comment()'
+\|
+= link_to '返回', collection_path, remote_options

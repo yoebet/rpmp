@@ -1,0 +1,36 @@
+%h3 解决问题
+
+= form_for @issue, :url => @issue.new_record? ? collection_path : resource_path(@issue), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @issue
+  %table
+    = render 'show_basic'
+
+    %tr
+      %td 附件
+      %td
+        = render 'attachments/attachments'
+        = render 'attachments/new_attachments', :attachment_tag => 'solve'
+    -if @issue.solved_by
+      %tr
+        %td 解决人:
+        %td= @issue.solved_by.name
+    %tr
+      %td 问题原因
+      %td= f.text_field :cause
+    %tr
+      %td 解决方案
+      %td= f.text_area :solution, :rows => 5
+    %tr
+      %td 已解决
+      %td
+        = hidden_field_tag 'form_source','solve'
+        = check_box_tag 'issue_solved','1',@issue.solved?
+        = label_tag 'issue_solved','已解决'
+  %br
+  .actions
+    = f.submit '保存'
+
+
+= link_to '详细', resource_path(@issue), remote_options
+\|
+= link_to '返回', collection_path, remote_options

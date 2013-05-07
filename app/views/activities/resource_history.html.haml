@@ -1,0 +1,12 @@
+
+- action_combined_map=Activity::ACTION_COMBINED_MAP
+- action_map=Activity::ACTION_MAP
+
+%ul.resource_history
+  - @activities.each do |m|
+    %li{:id=>"a#{m.id}"}
+      = m.created_at.datetime_ydyn
+      = m.user.name
+      - pn=m.subject_type.downcase
+      = action_combined_map["#{pn}:#{m.action}"]||action_map[m.action]
+

@@ -1,0 +1,32 @@
+%h3 客户
+
+%table.list-table
+  %tr
+    %th 姓名
+    %th 机构
+    %th 部门
+    %th 职位
+    %th 电话
+    %th 邮箱
+    %th 备注
+    %th
+
+  - dl=7.days.ago
+  - @customers.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      %td= m.name
+      %td= m.organ
+      %td= m.department
+      %td= m.title
+      %td= m.phone
+      %td= m.email
+      %td= m.memo
+      %td
+        = link_to '详细', resource_path(m), remote_options
+        = link_to '修改', edit_resource_path(m), remote_options
+        - if m.created_at > dl and @cu.pm?(@project)
+          = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete, :remote => true
+= will_paginate @customers
+%br
+
+= link_to '增加', new_resource_path, remote_options

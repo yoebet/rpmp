@@ -1,0 +1,33 @@
+= form_for :message, :url => messages_path(), :namespace => :reply, :remote => true do |f|
+  = f.hidden_field :replied_message_id, :id=>'replied_message_id'
+  %table
+    %col(style='width:50px;')
+    %tr
+      %td 接收人
+      %td
+        -mrc=replied_message.message_receives_count
+        %div
+          %div(style="float:left;")
+            = replied_message.sender.name
+            = hidden_field_tag :receiver_id, replied_message.sender.id
+          - if not mrc.nil? and mrc > 1
+            %div(style="float:right;")
+              = check_box_tag "multi_receiver", "1", false, :id=>"reply_multi_receiver"
+              = label_tag "reply_multi_receiver", "包含其他接收人"
+        - if not mrc.nil? and mrc > 1
+          #reply_candidates(style="display:none;clear:both;")
+            - replied_message.message_receives.each do |mr|
+              - receiver=mr.receiver
+              - unless receiver.id==@cu.id or receiver.id==replied_message.sender.id
+                %div
+                  = check_box_tag 'receiver_ids[]', receiver.id, true, :id => "receiver_id_#{receiver.id}"
+                  = label_tag "receiver_id_#{receiver.id}", receiver.name
+    %tr
+      %td 标题
+      %td= f.text_field :title, :style => 'width:300px;'
+    %tr
+      %td 内容
+      %td= f.text_area :content, :rows => 5, :style => 'width:300px;'
+    %tr
+      %td
+      %td= f.submit '发送'

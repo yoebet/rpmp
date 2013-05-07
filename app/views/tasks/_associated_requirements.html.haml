@@ -1,0 +1,9 @@
+%ul
+  - ids=@task.requirements.map &:id
+  - list=@project.requirements.uncompleted.select {|r|not r.original?}
+  - @task.requirements.each {|r| list << r unless list.include?(r)}
+  - list.each do |req|
+    %li
+      = check_box_tag 'requirement_ids[]', req.id, ids.include?(req.id), :id => "requirement_#{req.id}"
+      = label_tag "requirement_#{req.id}", req.abstract
+      = link_to '详情', project_requirement_path(@project,req)

@@ -1,0 +1,12 @@
+.user_box{:id=>['user',user.id]}
+  = form_tag sys_project_member_role_path(@project,user), :method => :put, :remote => true, 'data-replace' => "user_#{user.id}" do
+    .title= user.name
+    .role_candidates
+      - c_ids = user.roles_in_project(@project).map &:id
+      - Sys::Role.all.each do |role|
+        %div
+          = check_box_tag 'role_ids[]', role.id, c_ids.include?(role.id), :id => "mr_#{role.id}"
+          = label_tag "mr_#{role.id}", role.name
+    .op
+      = submit_tag '保存'
+      = link_to '取消', sys_project_member_role_path(@project,user), :remote => true, 'data-replace' => "user_#{user.id}"

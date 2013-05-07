@@ -1,0 +1,20 @@
+
+  <%= form_tag do %>
+    <fieldset>
+      <legend>请登录</legend>
+      <table style="margin: .5em;">
+        <tr>
+          <td><label for="name">用户:</label></td>
+          <td><%= text_field_tag :name, params[:name], :style => 'width:150px;' %></td>
+        </tr>
+        <tr>
+          <td><label for="password">密码:</label></td>
+          <td><%= password_field_tag :password, params[:password], :style => 'width:150px;' %></td>
+        </tr>
+        <tr>
+          <td> </td>
+          <td><%= submit_tag "登录" %></td>
+        </tr>
+      </table>
+    </fieldset>
+  <% end %>

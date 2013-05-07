@@ -1,0 +1,17 @@
+%h3
+  标签
+  - if @name
+    %span(style="font-size:12px;")= "（#{@name}）"
+
+%ul
+  - @tags.each do |tag|
+    %li
+      = "#{tag.subject_type}："
+      - subject=tag.subject
+      - subject_name= subject.respond_to?(:abstract)? subject.abstract : subject.name
+      = link_to "#{subject_name}", "#{project_path(@project)}/#{tag.subject_type.downcase.pluralize}/#{tag.subject_id}"
+
+= will_paginate @tags
+
+%br
+  = link_to '返回', collection_path, remote_options

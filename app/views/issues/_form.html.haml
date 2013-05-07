@@ -1,0 +1,27 @@
+= form_for @issue, :url => @issue.new_record? ? collection_path : resource_path(@issue), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @issue
+  %table
+    = render 'form_basic', :f => f
+
+    %tr
+      %td 附件
+      %td
+        - alter_att = (@issue.new_record? or @issue.registrar.id==@cu.id or @cu.pm?(@project))
+        - unless @issue.new_record?
+          = render 'attachments/attachments', :can_delete => alter_att
+        = render 'attachments/new_attachments'
+    - if not @issue.new_record? and @cu.pm?(@project)
+      %tr
+        %td 状态
+        %td= f.select :status, Issue::STATUS
+    - elsif @reopen
+      %tr
+        %td 状态
+        %td （重新打开）
+    %tr
+      %td 标签
+      %td= text_field_tag :tags, (@issue.tags.map &:name).join(' '), :size => 30
+
+  %br
+  .actions
+    = f.submit @reopen ? '重新打开':'保存'

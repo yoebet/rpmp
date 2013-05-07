@@ -1,0 +1,38 @@
+%h3 测试
+
+%table.list-table
+  %tr
+    %th 程序版本
+    %th 负责人
+    %th 概要
+    %th 附件
+    %th 评论
+    %th 创建人
+    %th 创建时间
+    %th 状态
+    %th 问题
+    %th
+
+  - dl=7.days.ago
+  - @tests.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      %td= m.release.version if m.release
+      %td= m.head.name
+      %td= m.abstract
+      %td= non_zero(m.attachments_count)
+      %td= non_zero(m.comments_count)
+      %td= m.registrar.name
+      %td= m.created_at.datetime_ydyn
+      %td= m.status_name
+      %td(style="text-align:right;")
+        = m.issues_count
+        = link_to '查看问题', project_test_issues_path(@project,m), remote_options
+      %td
+        = link_to '详细', resource_path(m), remote_options
+        - if m.created_at > dl and (not m.confirmed or @cu.pm?(@project))
+          = link_to '修改', edit_resource_path(m), remote_options
+          = link_to '删除', resource_path(m), :confirm => '确定要删除吗?相关的问题也会被删除！', :method => :delete, :remote => true
+= will_paginate @tests
+%br
+
+= link_to '新测试', new_resource_path, remote_options

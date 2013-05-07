@@ -1,0 +1,10 @@
+#member-role
+  %h4
+    成员-角色
+    %span(style="font-size:12px;float:right;")
+      = link_to '（角色-成员）', role_members_project_path(@project), :remote => true, 'data-replace' => 'member-role'
+  - @project.users.sort.each do |user|
+    .title= user.name
+    %ul
+      - user.roles_in_project(@project).each do |role|
+        %li= role.name

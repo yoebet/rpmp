@@ -1,0 +1,21 @@
+%h3 评论
+
+%table.list-table
+  %tr
+    %th 关于
+    %th 标题
+    %th 内容
+    %th 作者
+    %th 时间
+
+  - @comments.each do |comment|
+    %tr{:id => "r_#{comment.id}"}
+      %td= link_to "#{comment.subject_type}", "#{project_path(@project)}/#{comment.subject_type.downcase.pluralize}/#{comment.subject_id}"
+      %td= comment.title
+      %td
+        %pre(style="border:none;")= comment.content
+      %td= comment.user.name
+      %td= comment.created_at.datetime_ydyn
+= will_paginate @comments
+
+%br

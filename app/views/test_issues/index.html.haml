@@ -1,0 +1,30 @@
+%h3
+  测试问题
+  %span(style="font-size:10px;")
+    = link_to "（#{@test.abstract}）", project_test_path(@project,@test), remote_options
+  %span(style="font-size:12px;float:right;")
+    - if action_name!='unsolved'
+      = link_to '未解决', unsolved_project_test_issues_path, remote_options
+    - if action_name!='to_test'
+      = link_to '待测试', to_test_project_test_issues_path, remote_options
+    - if action_name!='index'
+      = link_to '全部', collection_path, remote_options
+
+%table.list-table
+  %tr
+    = render '/issues/ths'
+    %th
+
+  - dl=7.days.ago
+  - @issues.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      = render 'issues/tds', :m => m
+      %td
+        = link_to '详细', resource_path(m), remote_options
+        - if m.created_at > dl and (not m.confirmed or @cu.pm?(@project))
+          = link_to '修改', edit_resource_path(m), remote_options
+          = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete, :remote => true
+= will_paginate @issues
+%br
+
+= link_to '增加问题', new_resource_path, remote_options

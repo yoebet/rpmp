@@ -1,0 +1,33 @@
+%h3 版本发布
+
+%table
+  %tr
+    %td 里程碑:
+    %td= @release.goal.version
+  %tr
+    %td 版本号:
+    %td= @release.version
+  %tr
+    %td 发布人:
+    %td= @release.registrar.name
+  %tr
+    %td 已确认:
+    %td= @release.confirmed ? "是" : "否"
+  %tr
+    %td 备注:
+    %td= @release.memo
+  %tr
+    %td 记录时间:
+    %td= resource.created_at.datetime_ydyn
+  %tr
+    %td 上次修改:
+    %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+  %tr
+    %td 附件
+    %td= render 'attachments/attachments', :att_host => @release
+
+%br
+- if not @release.confirmed or @cu.pm?(@project)
+  = link_to '修改', edit_resource_path(@release), remote_options
+  \|
+= link_to '返回', collection_path, remote_options

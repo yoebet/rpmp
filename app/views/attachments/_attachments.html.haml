@@ -1,0 +1,18 @@
+#attachments.nestedResource
+  %table.attachments
+    - _att_host=if defined? att_host then att_host else resource end
+    - unless _att_host.respond_to?(:attachments_count) and (_att_host.attachments_count.nil? or _att_host.attachments_count.zero?)
+      - _att_host.attachments.each do |attachment|
+        %tr{:id=>"r_#{attachment.id}"}
+          %td= attachment.name
+          %td= attachment.memo
+          %td(style="text-align:right;")
+            = (attachment.content_size+512) >> 10
+            K
+          %td= attachment.presenter.name if attachment.presenter
+          %td= attachment.created_at.datetime_ydyn
+          %td
+            = link_to_function '查看', "view_image(#{attachment.id},'#{image_project_attachment_path(@project,attachment)}',#{attachment.image_width},600)" if attachment.image?
+            = link_to '下载', download_project_attachment_path(@project,attachment)
+            - if defined? can_delete and can_delete
+              %td= link_to '删除', project_attachment_path(@project,attachment), :confirm => '确定要删除吗?', :method => :delete, :remote => true

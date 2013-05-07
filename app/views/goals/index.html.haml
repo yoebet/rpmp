@@ -1,0 +1,36 @@
+%h3 里程碑
+
+%table.list-table
+  %tr
+    %th 版本号
+    %th 类型
+    %th 重要性
+    %th 概要
+    %th 发布日期
+    %th 评论
+    %th 创建时间
+    %th 状态
+    %th
+
+  - dl=7.days.ago
+  - @goals.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      %td= m.version
+      %td= m.version_type_name
+      %td= m.importance_name
+      %td{:title=>m.content}= m.abstract
+      %td= m.release_on
+      %td= non_zero(m.comments_count)
+      %td= m.created_at.datetime_ydyn
+      %td{:class => css_class_by_status(m.status)}= m.status_name
+      %td
+        = link_to '详细', resource_path(m), remote_options
+        - if m.created_at > dl and (not m.confirmed or @cu.pm?(@project))
+          = link_to '修改', edit_resource_path(m), remote_options
+          = link_to '删除', resource_path(m), :confirm => "确定要删除吗?", :method => :delete, :remote => true
+= will_paginate @goals
+
+%br
+
+- if  @cu.pm?(@project)
+  = link_to '增加', new_resource_path, remote_options

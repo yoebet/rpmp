@@ -1,0 +1,39 @@
+= form_for @communication, :url => @communication.new_record? ? collection_path : resource_path(@communication), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @communication
+  %table
+    %tr
+      %td 日期
+      %td= render 'application/date-popup', :field => 'communicate_on', :f => f
+    %tr
+      %td 沟通方式
+      %td= f.select :communicate_type, Communication::COMMUNICATE_TYPE
+    %tr
+      %td 客户
+      %td= f.collection_select :customer_id, @project.customers, :id, :name
+    %tr
+      %td 概要
+      %td= f.text_field :abstract
+    %tr
+      %td 沟通内容
+      %td= f.text_area :content, :rows => 5
+    %tr
+      %td 备注
+      %td= f.text_area :memo, :rows => 2
+    - unless @communication.new_record?
+      %tr
+        %td 已确认
+        %td{:id=>'confirmed'}
+          = @communication.confirmed ? '是' : '否'
+          - if not @communication.confirmed and @cu.pm?(@project)
+            = link_to '主管确认', project_communication_path(@project,@communication)+'/pm_confirm', :method => :post, :remote => true
+    %tr
+      %td 附件
+      %td
+        - unless @communication.new_record?
+          = render 'attachments/attachments', :can_delete => true
+        = render 'attachments/new_attachments'
+    %tr
+      %td 标签
+      %td= text_field_tag :tags, (resource.tags.map &:name).join(' '), :size => 30
+  .actions
+    = f.submit '保存'

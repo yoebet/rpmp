@@ -1,0 +1,26 @@
+= form_for @customer, :url => @customer.new_record? ? collection_path : resource_path(@customer) do |f|
+  = render 'application/error_messages', :model => @customer
+  %table
+    %tr
+      %td 姓名
+      %td= f.text_field :name
+    %tr
+      %td 机构
+      %td= f.text_field :organ
+    %tr
+      %td 部门
+      %td= f.text_field :department
+    %tr
+      %td 职位
+      %td= f.text_field :title
+    %tr
+      %td 电话
+      %td= f.text_field :phone
+    %tr
+      %td 邮箱
+      %td= f.text_field :email
+    %tr
+      %td 备注
+      %td= f.text_area :memo, :rows => 2
+  .actions
+    = f.submit '保存'

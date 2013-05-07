@@ -1,0 +1,11 @@
+- if defined? @cu
+  %li= link_to '公告', announcements_path, :class => controller_name=='announcements' ? 'currentLink' : ''
+  %li= link_to '消息', messages_path, :class => controller_name=='messages' ? 'currentLink' : ''
+  %li= link_to '周报', weeklies_projects_path, :class => action_name=='weeklies' ? 'currentLink' : ''
+  %li= link_to '问题', issues_projects_path, :class => action_name[/issues/] ? 'currentLink' : ''
+  %li= link_to '任务', tasks_projects_path, :class => action_name=~/(?<!my_)tasks/ ? 'currentLink' : ''
+  %li= link_to '我的任务', my_tasks_projects_path, :class => action_name=~/my_tasks/ ? 'currentLink' : ''
+  - if @cu.all_projects_visible?
+    %li= link_to '任务统计', task_ranks_projects_path, :class => (action_name=='task_ranks'||action_name=='task_matrix') ? 'currentLink' : ''
+  %li= link_to '项目动态', activities_projects_path, :class => action_name=='activities' ? 'currentLink' : ''
+  %li= link_to '我的项目', projects_path, :class => (controller_name=='projects' and (action_name=='index' or action_name=='include_inactive')) ? 'currentLink' : ''

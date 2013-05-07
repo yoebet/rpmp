@@ -1,0 +1,132 @@
+#new_message{:style=>'display:none;'}
+  = form_for :message, :url => messages_path(), :remote => true do |f|
+    %table
+      %col(style='width:50px;')
+      %tr
+        %td 接收人
+        %td
+          - options=options_for_select(Sys::Department.all.map{|d|[d.name,"d#{d.id}"]})+options_from_collection_for_select(@cu.visible_projects, :id, :code)
+          = select_tag "categories", options, :include_blank => true
+          = select_tag 'receiver_id', option_groups_from_collection_for_select(Sys::Department.all, 'users', 'name', 'id', 'name')
+          %div(style="float:right;")
+            = check_box_tag "multi_receiver"
+            = label_tag "multi_receiver", "多人"
+          #candidates(style="display:none;")
+            %div
+              <input type="checkbox" id="all_or_none" value="1" />
+              = label_tag "all_or_none", "（全选）"
+            #receiver_candidates
+
+      %tr
+        %td 标题
+        %td= f.text_field :title, :style => 'width:300px;'
+      %tr
+        %td 内容
+        %td= f.text_area :content, :rows => 5, :style => 'width:300px;'
+      %tr
+        %td
+        %td= f.submit '发送'
+
+:javascript
+  function new_message(){
+    $('#new_message').dialog({title:'新消息',width:390})
+  }
+  $(function(){
+    $message_content=$('#message_content')
+    $('#new_message form').bind('ajax:before', function(){
+        if($('#multi_receiver')[0].checked){
+          if($('#receiver_candidates input[type=checkbox]:checked').size()==0){
+            alert('请选择接收人')
+            return false
+          }
+        }
+        if($message_content.val()==''){
+          $message_content[0].focus()
+          return false
+        }
+        return true
+    }).bind('ajax:success', function(evt, data, status, xhr){
+      $('#new_message').dialog('close')
+      var message=$(data)
+      $('#messages').prepend(message)
+      message.effect( 'highlight', {}, 3000 )
+    })
+
+    var $select_receiver=$('select#receiver_id')
+    var $receiver_candidates=$('#receiver_candidates')
+
+    function setReceiverOptions(members){
+      $select_receiver.empty()
+      $.each(members, function(i,member) {
+        $select_receiver.append(
+            $('<option></option>').val(member.id).html(member.name)
+        )
+      })
+    }
+
+    function setReceiverCheckboxes(members){
+      $('#all_or_none')[0].checked=false
+      $receiver_candidates.empty()
+      $.each(members, function(i,member) {
+        var checkbox='<input type="checkbox" name="receiver_ids[]" id="receiver_ids_'+member.id+'" value="'+member.id+'">'
+        var label='<label for="receiver_ids_'+member.id+'">'+member.name+'</label>'
+        $receiver_candidates.append('<div>'+checkbox+''+label+'</div>')
+      })
+    }
+
+    $categories=$('select#categories')
+    var cat0='_'
+    var members=$('select#receiver_id option').map(function(i,e){
+      return {id:e.value,name:e.text}
+    })
+    $categories.data(cat0,members)
+    $categories.data(cat0+'option_html',$select_receiver.html())
+    setReceiverCheckboxes(members)
+
+    $categories.change(function(){
+      var cat=$categories.val()
+      if(!cat){
+        cat=cat0
+      }
+
+      var members=$categories.data(cat)
+      if(members){
+        var option_html=$categories.data(cat+'option_html')
+        if(option_html){
+          $select_receiver.html(option_html)
+        }else{
+          setReceiverOptions(members)
+        }
+        var check_box_html=$categories.data(cat+'check_box_html')
+        if(check_box_html){
+          $('#all_or_none')[0].checked=false
+          $receiver_candidates.html(check_box_html)
+        }else{
+          setReceiverCheckboxes(members)
+        }
+        return
+      }
+      var url=''
+      if(/^d.*/.test(cat)){
+        url="#{departments_path()}/"+cat.substr(1)+'/users'
+      }else{
+        url="#{projects_path()}/"+cat+'/members'
+      }
+      $.get(url,function(members, status, xhr){
+        setReceiverOptions(members)
+        setReceiverCheckboxes(members)
+        $categories.data(cat,members)
+      },'json')
+    })
+
+    $('#multi_receiver').click(function(){
+      $select_receiver.attr('disabled',this.checked)
+      this.checked? $('#candidates').show():$('#candidates').hide()
+    })
+    $('#all_or_none').click(function(){
+      var checked=this.checked
+      $('#receiver_candidates input[type=checkbox]').each(function(i,e){
+        this.checked=checked
+      })
+    })
+  })

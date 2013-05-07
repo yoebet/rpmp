@@ -1,0 +1,67 @@
+%h3 里程碑
+
+%table.columns
+  %tr
+    %td 版本号:
+    %td= @goal.version
+  %tr
+    %td 类型:
+    %td= @goal.version_type_name
+  %tr
+    %td 重要性:
+    %td= @goal.importance_name
+  %tr
+    %td 概要:
+    %td= @goal.abstract
+  %tr
+    %td 内容:
+    %td
+      %pre= @goal.content
+  %tr
+    %td 发布日期:
+    %td= @goal.release_on
+  %tr
+    %td 备注:
+    %td= @goal.memo
+  %tr
+    %td 已确认:
+    %td= @goal.confirmed ? '是' : '否'
+  %tr
+    %td 创建人:
+    %td= @goal.registrar.name
+  %tr
+    %td 创建时间:
+    %td= resource.created_at.datetime_ydyn
+  %tr
+    %td 上次修改:
+    %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+  %tr
+    %td 状态
+    %td{:class => css_class_by_status(@goal.status)}= @goal.status_name
+
+%br
+
+- unless @goal.releases_count.nil? or @goal.releases_count.zero?
+  .title 版本发布
+  %hr
+  -@goal.releases.each do |release|
+    = render 'release', :release => release
+
+%br
+= render 'comments/comments'
+
+%br
+= link_to history_project_goal_path(@project,@goal), resource_history_link_options do
+  .title 历史...
+#resource_history
+
+%br
+- if not @goal.confirmed or @cu.pm?(@project)
+  = link_to '修改', edit_resource_path(@goal), remote_options
+  \|
+- if @goal.status==Const::STATUS_UNCOMPLETED
+  = link_to '发布版本', release_project_goal_path(@project,@goal), remote_options
+  \|
+= link_to_function '评论', 'new_comment()'
+\|
+= link_to '返回', collection_path, remote_options

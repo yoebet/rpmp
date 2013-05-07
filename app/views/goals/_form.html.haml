@@ -1,0 +1,33 @@
+= form_for @goal, :url => @goal.new_record? ? collection_path : resource_path(@goal) do |f|
+  = render 'application/error_messages', :model => @goal
+  %table
+    %tr
+      %td 版本号
+      %td= f.text_field :version
+    %tr
+      %td 类型
+      %td= f.select :version_type, Goal::VERSION_TYPE
+    %tr
+      %td 重要性
+      %td= f.select :importance, Goal::IMPORTANCE
+    %tr
+      %td 概要
+      %td= f.text_field :abstract
+    %tr
+      %td 内容
+      %td= f.text_area :content, :rows => 5
+    %tr
+      %td 发布日期
+      %td= render 'application/date-popup', :field => 'release_on', :f => f
+    %tr
+      %td 备注
+      %td= f.text_area :memo, :rows => 2
+    %tr
+      %td 已确认
+      %td= f.check_box :confirmed
+    - unless @goal.new_record? 
+      %tr
+        %td 状态
+        %td= f.select :status, Goal::STATUS
+  .actions
+    = f.submit '保存'

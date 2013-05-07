@@ -1,0 +1,11 @@
+%td= m.raised_by.name
+%td{:title=>m.content}= m.abstract
+%td= m.modu.name if m.modu
+%td= m.issue_type_name
+%td{:class => css_class_by_urgency(m.urgency)}= m.urgency_name
+%td= non_zero(m.attachments_count)
+%td= non_zero(m.comments_count)
+%td= m.registrar.name
+%td= m.created_at.datetime_ydyn
+%td= non_zero(m.task_associations.count)
+%td{:class => css_class_by_status(m.status)}= m.status_name

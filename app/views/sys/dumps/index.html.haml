@@ -1,0 +1,23 @@
+%h3
+  备份
+  %span(style="font-size:12px;float:right;")
+    = link_to "创建备份（全部表）", collection_path, :confirm => "要创建数据库备份（全部表）吗？", :method => :post
+    \|
+    = link_to "创建备份（不含附件表）", collection_path(:ia=>'1'), :confirm => "要创建数据库备份（不含附件表）吗？", :method => :post
+
+%table.list-table
+  %tr
+    %th 文件名
+    %th 创建时间
+    %th 大小(K)
+    %th
+
+  - @dump_files.each do |name,file|
+    %tr
+      %td= name
+      %td= file.mtime.datetime_ydyn
+      %td(class="number")= (file.size+512) >> 10
+      %td
+        - key=controller.check_key(file)
+        = link_to '删除', sys_dump_path(key, :name => name), :confirm => '确定要删除吗?', :method => :delete
+        = link_to '下载', download_sys_dump_path(key, :name => name), :confirm => "确定要下载备份 #{name} 吗?", :method => :post

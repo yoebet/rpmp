@@ -1,0 +1,31 @@
+
+- replied_message=message.replied_message
+- if replied_message
+  %div
+    （ 回复
+    = replied_message.sender.name
+    = link_to_function message_title_safe(replied_message), "read_message(#{replied_message.id})"
+    ）
+.messageReceives
+  %span.message_to_tip TO:
+  - rtip=@cu.id==message.sender.id
+  != message.message_receives.map {|r|message_receive_info(r,rtip)}.join(', ')
+.messageTitle= message.title
+%div
+  %pre= message.content
+.foot
+  = message.sender.name
+  = message.created_at.datetime_dyn
+
+.reply_messages
+  - if @cu.id==message.sender.id
+    - rmc=message.reply_messages_count
+    - if not rmc.nil? and rmc > 0
+      .title 回复：
+      - reply_messages=message.reply_messages
+      - reply_messages.each do |rm|
+        .reply_message
+          = rm.sender.name
+          = link_to_function message_title_safe(rm), "read_message(#{rm.id})"
+  - else
+    .title= link_to_function '回复', "reply_message(#{message.id})"

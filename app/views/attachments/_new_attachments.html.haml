@@ -1,0 +1,13 @@
+#new_attachments.nestedResource
+.title
+  #atmh{:style => 'display:none'}
+    .atm
+      = file_field_tag 'attachments[][uploaded_attachment]'
+      备注：
+      = text_field_tag 'attachments[][memo]'
+      - if defined? attachment_tag
+        = hidden_field_tag 'attachments[][tag]',attachment_tag
+      = link_to_function "取消", '$(this).parent().remove()'
+  :javascript
+    var atm_tmpl=$('#atmh').remove().html()
+  = link_to_function '增加附件', '$("#new_attachments").append(atm_tmpl)'

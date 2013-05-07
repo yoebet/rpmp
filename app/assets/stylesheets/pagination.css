@@ -1,0 +1,32 @@
+.pagination {
+  border-bottom: 1px dashed #b7b7b7;
+  text-align: center;
+  padding-top: 1em;
+  cursor: default;
+  float: right;
+}
+.pagination a, .pagination span {
+    padding: 0.2em 0.3em;
+}
+.pagination .disabled {
+    color: #b7b7b7;
+}
+.pagination .current {
+    font-style: normal;
+    font-weight: bold;
+    background-color: #bebebe;
+    display: inline-block;
+    width: 1.4em;
+    height: 1.4em;
+    line-height: 1.5;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    text-shadow: rgba(255, 255, 255, 0.8) 1px 1px 1px;
+}
+.pagination a {
+    text-decoration: none;
+}
+.pagination a:hover, .pagination a:focus {
+    text-decoration: underline;
+}

@@ -1,0 +1,8 @@
+- if @task.completed?
+  %tr.task_rank
+    %td 评分:
+    %td{:class => css_class_by_work_rank(@task.work_rank)}= @task.work_rank_name
+  - if @task.ranked?
+    %tr.task_rank
+      %td 评分备注:
+      %td= @task.rank_memo

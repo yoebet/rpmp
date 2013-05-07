@@ -1,0 +1,8 @@
+%h3
+  我的项目
+  %span(style="font-size:12px;float:right;")
+    - if action_name=='index' and @more
+      = link_to '不活跃项目', inactive_projects_path
+%ul
+  - @projects.each do |project|
+    %li{:class=>"#{project.major? ? 'major_project':''} #{project.inactive? ? 'inactive_project':''}"}= link_to "#{project.name}（#{project.code}）", project_path(project)

@@ -1,0 +1,29 @@
+%h3
+  用户
+  %span(style="font-size:12px;float:right;")
+    - if action_name=='disabled'
+      = link_to '正常', sys_users_path
+    - else
+      = link_to '停用', disabled_sys_users_path
+
+%table.list-table
+  %tr
+    %th 姓名
+    %th 部门
+    %th 项目
+    %th 管理员
+    %th 停用
+    %th
+
+  - @users.each do |user|
+    %tr
+      %td= user.name
+      %td= user.department.name if user.department
+      %td= user.all_projects_visible? ? '*' : user.projects.pluck(:code).sort.join(',')
+      %td= user.root? ? 'root' : (user.admin? ? '是':'')
+      %td= user.enabled? ? '':'是'
+      %td= link_to '修改', edit_resource_path(user)
+
+%br
+
+= link_to '增加', new_resource_path

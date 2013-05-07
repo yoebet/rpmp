@@ -1,0 +1,25 @@
+%div(style="margin:1em;")
+  %h3(style="min-width: 300px;")
+    收到消息
+
+  %ul#received_messages
+    - @message_receives.each do |mr|
+      = render 'received_message', :mr=>mr
+  = link_to('更多...', received_messages_path) if @receives_has_more
+
+%div(style="margin:1em;")
+  %h3(style="min-width: 300px;")
+    已发消息
+    %span(style="font-size:12px;float:right;")
+      = link_to_function '发消息...', 'new_message()'
+
+  %ul#messages
+    - @messages.each do |message|
+      = render 'message_li', :message => message
+  = link_to('更多...', sent_messages_path) if @messages_has_more
+
+= render 'read'
+
+= render 'reply'
+
+= render 'new_message'

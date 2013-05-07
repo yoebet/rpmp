@@ -1,0 +1,10 @@
+%ul
+  - ids=@issue.associated_issues.map &:id
+  - list=associated_resources_for_edit(:issue,@issue.associated_issues)-[@issue]
+  - list.each do |ai|
+    %li
+      = check_box_tag 'associated_issue_ids[]', ai.id, ids.include?(ai.id), :id => "associated_issue_#{ai.id}"
+      = label_tag "associated_issue_#{ai.id}", ai.abstract
+      %span.status_tip{:class => css_class_by_status(ai.status)}= ai.status_name
+      = link_to '详情', project_issue_path(@project,ai), remote_options
+

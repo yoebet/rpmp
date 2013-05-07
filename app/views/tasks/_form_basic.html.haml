@@ -1,0 +1,49 @@
+%tr
+  %td 接收人
+  %td= f.collection_select :recipient_id, @project.users.in_department, :id, :name
+%tr
+  %td 优先级
+  %td= f.select :priority, Task::PRIORITY
+%tr
+  %td 概要
+  %td= f.text_field :abstract
+%tr
+  %td 任务内容
+  %td= f.text_area :content, :rows => 5
+%tr
+  %td 系统模块:
+  %td= f.collection_select :modu_id, @project.modus, :id, :name, :include_blank => true
+%tr
+  %td 相关需求
+  %td
+    #associated_requirements
+      - arp=@task.new_record? ? requirements_project_tasks_path(@project) : requirements_project_task_path(@project,@task)
+      =link_to arp, :remote => true, 'data-type' => 'html', 'data-update' => 'associated_requirements' do
+        %span.expand_tip 展开...
+%tr
+  %td 相关问题
+  %td
+    #associated_issues
+      - if @task.new_record? && @task.issues.any?
+        = render 'associated_issues'
+      - else
+        - aip=@task.new_record? ? issues_project_tasks_path(@project) : issues_project_task_path(@project,@task)
+        =link_to aip, :remote => true, 'data-type' => 'html', 'data-update' => 'associated_issues' do
+          %span.expand_tip
+            展开...
+            = non_zero(@task.issues_count)
+%tr
+  %td 预计期限
+  %td
+    = render 'application/date-popup', :field => 'expected_start_on', :f => f
+    至
+    = render 'application/date-popup', :field => 'expected_finish_on', :f => f
+%tr
+  %td 预计天数
+  %td= f.text_field :expected_days
+%tr
+  %td 长期任务
+  %td= f.check_box :long_term
+%tr
+  %td 备注
+  %td= f.text_area :memo, :rows => 2

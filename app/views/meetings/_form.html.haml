@@ -1,0 +1,45 @@
+= form_for @meeting, :url => @meeting.new_record? ? collection_path : resource_path(@meeting), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @meeting
+  %table
+    %tr
+      %td 日期
+      %td= render 'application/date-popup', :field => 'holding_on', :f => f
+    %tr
+      %td 主持人
+      %td= f.collection_select :emcee_id, @project.users, :id, :name
+    %tr
+      %td 参会人员
+      %td
+        .user_candidates
+          - ids=@meeting.participant_ids
+          - @project.users.each do |user|
+            %div
+              = check_box_tag 'participant_ids[]', user.id, ids.include?(user.id), :id => "participant_#{user.id}"
+              = label_tag "participant_#{user.id}", user.name
+    %tr
+      %td 会议主题
+      %td= f.text_field :abstract
+    %tr
+      %td 会议内容
+      %td= f.text_area :content, :rows => 5
+    %tr
+      %td 备注
+      %td= f.text_area :memo, :rows => 2
+    %tr
+      %td 附件
+      %td
+        - unless @meeting.new_record?
+          = render 'attachments/attachments', :can_delete => true
+        = render 'attachments/new_attachments'
+    - unless @meeting.new_record?
+      %tr
+        %td 已确认
+        %td{:id=>'confirmed'}
+          = @meeting.confirmed ? '是' : '否'
+          - if not @meeting.confirmed and @cu.pm?(@project)
+            = link_to '主管确认', project_meeting_path(@project,@meeting)+'/pm_confirm', :method => :post, :remote => true
+    %tr
+      %td 标签
+      %td= text_field_tag :tags, (resource.tags.map &:name).join(' '), :size => 30
+  .actions
+    = f.submit '保存'

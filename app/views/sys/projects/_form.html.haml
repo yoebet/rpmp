@@ -1,0 +1,37 @@
+= form_for @project do |f|
+  = render 'application/error_messages', :model => @project
+
+  .field
+    = f.label '名称'
+    = f.text_field :name
+  .field
+    = f.label '代号'
+    = f.text_field :code
+  .field
+    = f.label '概况'
+    = f.text_area :description, :rows => 5
+  .field
+    = f.label :scm
+    = f.text_field :scm
+  .field
+    = f.label '重点'
+    = f.check_box :major
+  .field
+    = f.label '不活跃'
+    = f.check_box :inactive
+  - unless @project.new_record?
+    .field
+      %b= link_to '成员 -> 角色', edit_sys_project_member_roles_path(@project)
+    .field
+      %b= link_to '角色 -> 成员', edit_sys_project_role_members_path(@project)
+
+  %h4 包含模块
+  %ul
+    - mod_ids = @project.mods.map &:id
+    - Sys::Mod.all.each do |mod|
+      %li
+        = check_box_tag 'proj_mod_ids[]', mod.id, @project.new_record? ? mod.def_included? : mod_ids.include?(mod.id), :id => "pm_#{mod.id}"
+        = label_tag "pm_#{mod.id}", mod.name
+
+  .actions
+    = f.submit '保存'

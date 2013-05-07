@@ -1,0 +1,25 @@
+%h3 配置
+
+%table.list-table
+  %tr
+    %th 名称
+    %th 说明
+    %th 配置值
+    %th 创建时间
+    %th 上次修改
+    %th
+
+  - @configs.each do |m|
+    %tr
+      %td= m.name
+      %td= m.zh_name
+      %td= m.value
+      %td= m.created_at.datetime_ydyn
+      %td= m.updated_at.datetime_ydyn unless m.updated_at==m.created_at
+      %td
+        = link_to '修改', edit_resource_path(m)
+        = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete
+
+%br
+
+= link_to '增加', new_resource_path

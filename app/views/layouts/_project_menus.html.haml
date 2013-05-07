@@ -1,0 +1,6 @@
+-if @project
+  - @project.mods.each do |mod|
+    - pcode=mod.code.pluralize
+    - unless pcode=='revisions' && !@cu.admin_or_root? and @cu.scm_username.blank?
+      - current_link = (controller_name == pcode or controller_name == 'test_issues' && pcode == 'tests' or controller_name == 'goals' && pcode == 'milestones')
+      %li= link_to mod.name, project_path(@project)+'/'+(mod.code['/'] ? mod.code : pcode), :class => current_link ? 'currentLink' : ''

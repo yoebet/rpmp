@@ -1,0 +1,64 @@
+%h3
+  任务绩效
+  - if @project
+    %span(style="font-size:12px;")= "（#{@project.code}）"
+  %span(style="font-size:12px;float:right;")
+    - if @project
+      = link_to '任务矩阵', matrix_project_task_statistics_path(@project), remote_options
+    - else
+      = link_to '任务矩阵', task_matrix_projects_path, remote_options
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    -#= render 'application/date-popup', :field => 'date_from', :v => params[:date_from],:can_empty=>true
+    -#至
+    -#= render 'application/date-popup', :field => 'date_to', :v => params[:date_to],:can_empty=>true
+    = select_tag 'year',  options_for_select(2012..Date.today.year, params[:year])
+    年
+    = select_tag 'month',  options_for_select(1..12, params[:month])
+    月
+    .actions
+      = submit_tag '统计'
+
+%table.list-table
+  %tr
+    %th 人员
+    - unless @project
+      %th 项目数
+    %th 完成任务
+    %th 预计天数
+    %th 实际天数
+    %th 未评分
+    %th{title:@rank_weight[:C]} &nbsp; C &nbsp;
+    %th{title:@rank_weight[:B]} &nbsp; B &nbsp;
+    %th{title:@rank_weight[:A]} &nbsp; A &nbsp;
+    %th{title:@rank_weight[:AA]} &nbsp;AA&nbsp;
+    %th{title:@rank_weight[:AAA]} AAA
+    %th 绩效
+
+  - @member_tasks.each do |mt|
+    %tr
+      %td= mt['recipient_name']
+      - unless @project
+        %td(class="number")= mt['projects_count']
+      %td(class="number")= mt['tasks_count']
+      %td(class="number")= non_zero(mt['expected_days'])
+      %td(class="number")= non_zero(mt['approved_days'])
+      %td(class="number work_rank_0")= non_zero(mt['UN_RANK'])
+      %td(class="number work_rank_1")= non_zero(mt['RANK_C'])
+      %td(class="number work_rank_2")= non_zero(mt['RANK_B'])
+      %td(class="number work_rank_3")= non_zero(mt['RANK_A'])
+      %td(class="number work_rank_4")= non_zero(mt['RANK_AA'])
+      %td(class="number work_rank_5")= non_zero(mt['RANK_AAA'])
+      - avg=mt['AVG_SCORE']
+      - if avg
+        - rr=case
+        - when avg < 0.8 then 1
+        - when 0.8 <= avg && avg < 0.9 then 2
+        - when 0.9 <= avg && avg < 1.1 then 3
+        - when 1.1 <= avg && avg < 1.2 then 4
+        - when avg >= 1.2 then 5
+        %td{class:"number work_rank_#{rr}", style:'font-weight:bold;'}= '%1.2f' %  avg
+      - else
+        %td
+%br

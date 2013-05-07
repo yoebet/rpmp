@@ -1,0 +1,16 @@
+%h3 项目成员
+
+%table.list-table
+  %tr
+    %th 姓名
+    %th 邮箱
+    %th 电话
+    %th 项目中角色
+  - @project.users.sort.each do |u|
+    %tr
+      %td= u.name
+      %td= u.email
+      %td= u.phone
+      %td
+        - rns=u.roles_in_project(@project).map &:name
+        = rns.join ','

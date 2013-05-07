@@ -1,0 +1,70 @@
+%h3
+  代码提交
+  %span(style="font-size:12px;float:right;")
+    = link_to '统计', statistic_project_revisions_path(@project), remote_options
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    版本
+    = text_field_tag 'revision_no', @filter['revision_no'], :style=>'width:40px;'
+    提交人
+    = text_field_tag 'author', @filter['author'], :style=>'width:70px;'
+    评论
+    = text_field_tag 'commit_comment', @filter['commit_comment'], :style=>'width:80px;'
+    全路径
+    = text_field_tag 'path', @filter['path'], :style=>'width:150px;'
+    操作
+    = select_tag 'path_action', options_for_select(Revision::ACTION_MAP.invert,@filter['path_action']), :include_blank => true
+    .actions
+      = submit_tag '筛选'
+
+%ul#revisions
+  - @revisions.each do |r|
+    %li{:id => "r#{r.id}"}
+      = r.commit_at.today? ? r.commit_at.strftime("%H:%M") : r.commit_at.strftime("%Y-%-m-%-d %H:%M")
+      = "r#{r.revision_no}"
+      = r.author
+      = link_to "文件数：#{r.revision_entries_count}", entries_project_revision_path(@project,r), :remote => true, 'data-update' => "r#{r.id}_entries", 'data-toggle' => 'true'
+      -if r.commit_comment
+        %span.revision_comment= r.commit_comment
+    %li{:id => "r#{r.id}_entries"}(style="display:none;")
+= will_paginate @revisions
+
+%br
+
+#source_explorer(style="display:none;padding:.5em .1em;")
+  %iframe(seamless)
+#source_explorer2(style="display:none;padding:.5em .5em;")
+  %pre
+#diff_explorer(style="display:none;padding:.5em .5em;")
+  %pre
+
+:javascript
+  $(function(){
+    $('#source_explorer').dialog({width:700,height:500,position:{my:'left top',at:'left+120 top+50'},autoOpen:false})
+    $('#source_explorer2').dialog({width:700,height:500,position:{my:'left top',at:'left+140 top+60'},autoOpen:false})
+    $('#diff_explorer').dialog({width:600,height:450,position:{my:'left top',at:'left+170 top+70'},autoOpen:false})
+  })
+
+  function view_source(path,revision_no){
+    $('#source_explorer iframe').attr('src',"#{@project.scm_project_repos(!request.remote_ip.start_with?('192.168.')) rescue ''}"+path+"?p="+revision_no)
+    $('#source_explorer').dialog( "option", "title", 'source(direct): '+path ).dialog('open')
+  }
+
+  function view_source2(path,entry_id){
+    $('#source_explorer2 pre').text('loading...')
+    $('#source_explorer2').dialog( "option", "title", 'source(delegate): '+path ).dialog('open')
+    $.get("#{project_revisions_path}/source/"+entry_id,function(text,status,xhr){
+      $('#source_explorer2 pre').text(text)
+    })
+  }
+
+  function diff_revision(path,entry_id,diff_with){
+    $('#diff_explorer pre').text('loading...')
+    $('#diff_explorer').dialog( "option", "title", 'diff: '+path ).dialog('open')
+    var url="#{project_revisions_path}/diff/"+entry_id
+    if(diff_with)url+="/"+diff_with
+    $.get(url,function(text,status,xhr){
+      $('#diff_explorer pre').text(text)
+    })
+  }

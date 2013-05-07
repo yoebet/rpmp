@@ -1,0 +1,14 @@
+%ul
+  - ids=@task.issues.map &:id
+  - list=@project.issues.uncompleted
+  - @task.issues.each {|r| list << r unless list.include?(r)}
+  - list.each do |issue|
+    %li
+      = check_box_tag 'issue_ids[]', issue.id, ids.include?(issue.id), :id => "issue_#{issue.id}"
+      - tasks_count=issue.task_associations.count
+      = label_tag "issue_#{issue.id}", issue.abstract
+      - if tasks_count and tasks_count>0
+        %span(style="font-size:10px;" title="已指派任务：#{tasks_count}")= "#{tasks_count}"
+      - else
+        %span(style="font-size:10px;" class="importance_4" title="尚未指派任务")= 0
+      = link_to '详情', project_issue_path(@project,issue)

@@ -1,0 +1,92 @@
+%h3 测试
+
+%table.columns
+  %tr
+    %td 程序版本:
+    %td= @test.release.version unless @test.release.nil?
+  %tr
+    %td 负责人:
+    %td= @test.head.name
+  %tr
+    %td 测试人员:
+    %td
+      - @test.participants.each do |user|
+        = user.name
+  %tr
+    %td 概要:
+    %td= @test.abstract
+  %tr
+    %td 测试内容:
+    %td
+      %pre= @test.content
+  %tr
+    %td 系统模块:
+    %td
+      - @test.modus.each do |modul|
+        = modul.name
+  %tr
+    %td 测试计划:
+    %td
+      - unless @test.test_plan.blank?
+        %pre= @test.test_plan
+  %tr
+    %td 相关需求
+    %td
+      %ul
+        - @test.requirements.each do |req|
+          %li= link_to req.abstract, project_requirement_path(@project,req)
+  %tr
+    %td 附件
+    %td= render 'attachments/attachments'
+  %tr
+    %td 过程记录:
+    %td
+      - unless @test.test_record.blank?
+        %pre= @test.test_record
+  %tr
+    %td 总结:
+    %td
+      - unless @test.conclusion.blank?
+        %pre= @test.conclusion
+  %tr
+    %td 状态:
+    %td= @test.status_name
+  %tr
+    %td 备注:
+    %td= @test.memo
+  %tr
+    %td 创建人:
+    %td= @test.registrar.name
+  %tr
+    %td 创建时间:
+    %td= resource.created_at.datetime_ydyn
+  %tr
+    %td 上次修改:
+    %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+  %tr
+    %td 已确认:
+    %td= @test.confirmed ? "是" : "否"
+  %tr
+    %td 问题数:
+    %td= @test.issues_count
+
+%br
+= render 'tags/tags'
+
+%br
+= render 'comments/comments'
+
+%br
+= link_to history_project_test_path(@project,@test), resource_history_link_options do
+  .title 历史...
+#resource_history
+
+%br
+= link_to '查看问题', project_test_issues_path(@project,@test), remote_options
+\|
+- if not @test.confirmed or @cu.pm?(@project)
+  = link_to '修改', edit_resource_path(@test), remote_options
+  \|
+= link_to_function '评论', 'new_comment()'
+\|
+= link_to '返回', collection_path, remote_options

@@ -1,0 +1,49 @@
+%br
+%table#weekly.list-table
+  %caption
+    %h3 工作周报
+  %tr
+    %th(width=75)
+      %div(style="width:75px;") 项目成员
+    %td(width=130)= @weekly.registrar.name
+    %th(width=75) 周末日期
+    %td= @weekly.weekend
+  %tr
+    %th 工作回顾
+    %td.review(colspan='3')
+      %pre= @weekly.review
+  %tr
+    %th 心得与思考
+    %td.thought(colspan='3')
+      %pre= @weekly.thought
+  %tr
+    %th 下周计划
+    %td.plan(colspan='3')
+      %pre= @weekly.plan
+  %tr
+    %th 备注
+    %td(colspan='3')
+      %pre= @weekly.memo
+
+%br
+提交时间:
+= resource.created_at.datetime_ydyn
+%br
+上次修改:
+= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+%br
+主管确认:
+= @weekly.confirmed ? "是" : "否"
+%br
+
+%br
+= render 'comments/comments'
+
+%br
+- if @cu==@weekly.registrar or @cu.pm?(@project)
+  = link_to '修改', edit_resource_path(@weekly)
+  \|
+= link_to_function '评论', 'new_comment()'
+\|
+= link_to '返回', collection_path, remote_options
+

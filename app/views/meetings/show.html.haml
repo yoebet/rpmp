@@ -1,0 +1,55 @@
+%h3 会议纪要
+
+%table.columns
+  %tr
+    %td 日期:
+    %td= @meeting.holding_on
+  %tr
+    %td 主持人:
+    %td= @meeting.emcee.name
+  %tr
+    %td 参会人员:
+    %td
+      - @meeting.participants.each do |user|
+        = user.name
+  %tr
+    %td 会议主题:
+    %td= @meeting.abstract
+  %tr
+    %td 会议内容:
+    %td
+      %pre= @meeting.content
+  %tr
+    %td 记录人:
+    %td= @meeting.registrar.name
+  %tr
+    %td 备注:
+    %td= @meeting.memo
+  %tr
+    %td 记录时间:
+    %td= resource.created_at.datetime_ydyn
+  %tr
+    %td 上次修改:
+    %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+  %tr
+    %td 附件
+    %td= render 'attachments/attachments'
+
+%br
+= render 'tags/tags'
+
+%br
+= render 'comments/comments'
+
+%br
+= link_to history_project_meeting_path(@project,@meeting), resource_history_link_options do
+  .title 历史...
+#resource_history
+
+%br
+- if not @meeting.confirmed or @cu.pm?(@project)
+  = link_to '修改', edit_resource_path(@meeting), remote_options
+  \|
+= link_to_function '评论', 'new_comment()'
+\|
+= link_to '返回', collection_path, remote_options

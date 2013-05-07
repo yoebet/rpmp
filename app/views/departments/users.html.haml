@@ -1,0 +1,4 @@
+%h4= @department.name
+%ul
+  - @department.users.each do |user|
+    %li= user.name

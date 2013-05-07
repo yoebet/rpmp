@@ -1,0 +1,8 @@
+(function(){
+    var $cur_row=$('#r_<%= params[:id1] %>')
+    var $target_row=$('#r_<%= params[:id2] %>')
+    $cur_row.fadeOut(200,function(){
+        $target_row.<%= (params[:dir] == 'up' or params[:dir] == 'top')? 'before':'after' %>($cur_row.detach())
+        $cur_row.fadeIn(300)
+    })
+})()

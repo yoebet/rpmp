@@ -1,0 +1,11 @@
+%h3 公告
+
+%ul
+  - @announcements.each do |m|
+    %li
+      = m.inscribe_date.date_zh if m.inscribe_date
+      = link_to m.title, resource_path(m)
+      - if m.current
+        %span{:class => "current_announcement"} *
+
+= will_paginate @announcements

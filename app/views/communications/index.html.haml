@@ -1,0 +1,33 @@
+%h3 客户沟通
+
+%table.list-table
+  %tr
+    %th 日期
+    %th 沟通方式
+    %th 客户
+    %th 概要
+    %th 附件
+    %th 记录人
+    %th 记录时间
+    %th
+
+  - dl=7.days.ago
+  - @communications.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      %td= m.communicate_on
+      %td= m.communicate_type_name
+      %td= m.customer.name if m.customer
+      %td= m.abstract
+      %td= non_zero(m.attachments_count)
+      %td= m.registrar.name
+      %td= m.created_at.datetime_ydyn
+      %td
+        = link_to '详细', resource_path(m), remote_options
+        - if m.created_at > dl and (not m.confirmed or @cu.pm?(@project))
+          = link_to '修改', edit_resource_path(m), remote_options
+          = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete, :remote => true
+= will_paginate @communications
+%br
+
+= link_to '增加', new_resource_path, remote_options
+

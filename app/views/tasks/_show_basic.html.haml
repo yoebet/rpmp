@@ -1,0 +1,56 @@
+%tr
+  %td 接收人:
+  %td= @task.recipient.name
+%tr
+  %td 优先级:
+  %td{:class => css_class_by_priority(@task.priority)}= @task.priority_name
+%tr
+  %td 概要:
+  %td= @task.abstract
+%tr
+  %td 任务内容:
+  %td
+    %pre= @task.content
+%tr
+  %td 系统模块:
+  %td= @task.modu.name if @task.modu
+%tr
+  %td 相关需求
+  %td
+    %ul
+      - @task.requirements.each do |req|
+        %li= link_to req.abstract, project_requirement_path(@project,req)
+%tr
+  %td 相关问题
+  %td
+    %ul
+      - @task.issues.each do |issue|
+        %li
+          = link_to issue.abstract, project_issue_path(@project,issue)
+          %span.status_tip{:class => css_class_by_status(issue.status)}= issue.status_name
+%tr
+  %td 预计期限:
+  %td
+    = @task.expected_start_on.date_ydyn_w if @task.expected_start_on
+    = '至' if @task.expected_start_on or @task.expected_finish_on
+    = @task.expected_finish_on.date_ydyn_w if @task.expected_finish_on
+%tr
+  %td 预计天数:
+  %td= @task.expected_days
+%tr
+  %td 长期任务
+  %td= @task.long_term ? '是' : '否'
+%tr
+  %td 备注:
+  %td
+    - unless @task.memo.blank?
+      %pre= @task.memo
+%tr
+  %td 分配人:
+  %td= resource.registrar.name
+%tr
+  %td 分配时间:
+  %td= resource.created_at.datetime_ydyn_w
+%tr
+  %td 上次修改:
+  %td= resource.updated_at.datetime_ydyn_w unless resource.updated_at==resource.created_at

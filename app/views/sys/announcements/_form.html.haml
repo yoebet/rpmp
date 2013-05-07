@@ -1,0 +1,37 @@
+= form_for @announcement, :url => @announcement.new_record? ? collection_path : resource_path(@announcement) do |f|
+  = render 'application/error_messages', :model => @announcement
+  %table
+    %tr
+      %td 标题
+      %td= f.text_field :title
+    %tr
+      %td 格式
+      %td
+        - [['普通','plain'],['html','html']].each do |label,value|
+          =f.radio_button :content_format, value
+          =f.label :content_format, label, :value => value
+    %tr
+      %td 公告内容
+      %td= f.text_area :content, :rows => 9, :cols => 70
+    %tr
+      %td 落款
+      %td= f.text_field :inscribe
+    %tr
+      %td 落款日期
+      %td= render 'application/date-popup', :field => 'inscribe_date', :f => f
+    %tr
+      %td 过期日期
+      %td= render 'application/date-popup', :field => 'expire_on', :f => f
+    %tr
+      %td 备注
+      %td= f.text_field :memo
+    - unless @announcement.new_record?
+      %tr
+        %td 状态
+        %td= f.select :status, Sys::Announcement::STATUS
+      %tr
+        %td 当前
+        %td= f.check_box :current
+
+  .actions
+    = f.submit '保存'

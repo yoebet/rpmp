@@ -1,0 +1,51 @@
+%h3 周报
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    - if @cu.admin_or_root? || @project && @cu.pm?(@project)
+      项目成员
+      - if @project
+        = select_tag 'registrar_id', options_from_collection_for_select(@project.users.in_department, 'id', 'name', @filter['registrar_id']), :include_blank => true
+      - else
+        = select_tag 'registrar_id', option_groups_from_collection_for_select(Sys::Department.all, 'users', 'name', 'id', 'name', @filter['registrar_id']), :include_blank => true
+    周末日期
+    = render 'application/date-popup', :field => 'weekend', :v => @filter['weekend'],:can_empty=>true
+    .actions
+      = submit_tag '筛选'
+
+%table.list-table
+  %tr
+    - unless @project
+      %th 项目
+    %th 项目成员
+    %th 周末日期
+    %th 评论
+    %th 创建时间
+    %th 上次修改
+    %th 主管确认
+    %th
+
+  - dl=6.days.ago
+  - @weeklies.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      - unless @project
+        %td{:title=>m.project.name}= link_to m.project.code, project_weeklies_path(m.project)
+      %td= m.registrar.name
+      %td= m.weekend
+      %td= non_zero(m.comments_count)
+      %td= m.created_at.datetime_ydyn
+      %td= m.updated_at.datetime_ydyn unless m.updated_at==m.created_at
+      %td= m.confirmed ? '是' : '否'
+      %td
+        = link_to '详细', project_weekly_path(m.project,m), remote_options
+        - if @project and m.created_at > dl and (@cu==m.registrar or @cu.pm?(m.project))
+          - if not m.confirmed or @cu.pm?(m.project)
+            = link_to '修改', edit_resource_path(m)
+          - unless m.confirmed
+            = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete, :remote => true
+= will_paginate @weeklies
+%br
+
+- if @project
+  = link_to '增加', new_resource_path, remote_options
+

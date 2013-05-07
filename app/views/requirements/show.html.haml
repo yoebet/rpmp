@@ -1,0 +1,71 @@
+%h3 需求
+
+%table.columns
+  %tr
+    %td 提出人
+    %td= @requirement.raised_by.name
+  %tr
+    %td 提出日期
+    %td= @requirement.raised_on.date_ydyn_w if @requirement.raised_on
+  %tr
+    %td 记录人
+    %td= @requirement.registrar.name
+  %tr
+    %td 重要性
+    %td{:class => css_class_by_importance(@requirement.importance)}= @requirement.importance_name
+  %tr
+    %td 概要
+    %td= @requirement.abstract
+  %tr
+    %td 需求内容
+    %td
+      %pre= @requirement.content
+  %tr
+    %td 系统模块:
+    %td= @requirement.modu.name if @requirement.modu
+  %tr
+    %td 客户沟通
+    %td
+      %ul
+        - @requirement.communications.each do |comm|
+          %li= link_to comm.abstract, project_communication_path(@project,comm)
+  %tr
+    %td 原始需求
+    %td= @requirement.original ? '是' : '否'
+  %tr
+    %td 备注
+    %td= @requirement.memo
+  %tr
+    %td 已确认
+    %td= @requirement.confirmed ? '是' : '否'
+  %tr
+    %td 记录时间
+    %td= "#{@requirement.created_at.datetime_ydyn_w}"
+  %tr
+    %td 上次修改
+    %td= "#{@requirement.updated_at.datetime_ydyn_w}" unless @requirement.updated_at==@requirement.created_at
+  %tr
+    %td 状态
+    %td{:class => css_class_by_status(@requirement.status)}= @requirement.status_name
+  %tr
+    %td 附件
+    %td= render 'attachments/attachments'
+
+%br
+= render 'tags/tags'
+
+%br
+= render 'comments/comments'
+
+%br
+= link_to history_project_requirement_path(@project,@requirement), resource_history_link_options do
+  .title 历史...
+#resource_history
+
+%br
+- if not @requirement.confirmed or @cu.pm?(@project)
+  = link_to '修改', edit_resource_path(@requirement), remote_options
+  \|
+= link_to_function '评论', 'new_comment()'
+\|
+= link_to '返回', collection_path, remote_options

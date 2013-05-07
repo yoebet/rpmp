@@ -1,0 +1,51 @@
+!!! 5
+- in_project = (defined? @project and @project and @project.id)
+%html
+  %head
+    %title= in_project ? @project.code : 'RPMP:'
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    #head
+      #banner
+        %div(style="float:left;")
+          #banner_major 软件项目管理平台
+          #banner_minor
+            = link_to current_announcement_path do
+              公告
+              - if @cu and @cu.announcement_notify?
+                %span.announcement_notify>new
+            &nbsp;
+            = link_to '我的项目', projects_path
+            - if in_project
+              \::
+              = link_to @project.name, project_path(@project)
+        #bantipc
+          #bantip
+            -if session[:user_id]
+              = link_to @cu.name,personal_edit_path
+              &nbsp;
+              - mrurc=@cu.message_receives.un_read.count
+              = link_to received_messages_path do
+                消息(
+                %span{:class=> mrurc>0 ?"un_read_message_count":""}>#{mrurc}
+                )
+              &nbsp;
+              = link_to '退出', sys_logout_path, :method => :delete
+    #hrl
+    #lmain
+      %ul#pmenu
+        - if controller.class <= Sys::AdminController
+          = render 'layouts/admin_menus'
+        - elsif in_project
+          = render 'layouts/project_menus'
+        - else
+          = render 'layouts/menus'
+    #rmain
+      -if flash[:err_msg]
+        %p#err_msg= flash[:err_msg]
+      -if flash[:notice]
+        %p#notice= flash[:notice]
+      = yield
+      %p &nbsp;

@@ -1,0 +1,107 @@
+%h3
+  任务
+  %span(style="font-size:12px;float:right;")
+    - if @project
+      - case "#{controller_name}.#{action_name}"
+        - when 'tasks.index'
+          = link_to '(未完成)', todo_project_tasks_path(@project), remote_options
+        - when 'tasks.todo'
+          = link_to '(全部)', project_tasks_path(@project), remote_options
+        - when 'my_tasks.index'
+          = link_to '(未完成)', todo_project_my_tasks_path(@project), remote_options
+        - when 'my_tasks.todo'
+          = link_to '(全部)', project_my_tasks_path(@project), remote_options
+    - else
+      - case action_name
+        - when 'tasks'
+          = link_to '(未完成)', tasks_todo_projects_path, remote_options
+        - when 'tasks_todo'
+          = link_to '(全部)', tasks_projects_path, remote_options
+        - when 'my_tasks'
+          = link_to '(未完成)', my_tasks_todo_projects_path, remote_options
+        - when 'my_tasks_todo'
+          = link_to '(全部)', my_tasks_projects_path, remote_options
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    - unless controller_name=='my_tasks'
+      接收人
+      - if @project
+        = select_tag 'recipient_id', options_from_collection_for_select(@project.users.in_department, 'id', 'name', @filter['recipient_id']), :include_blank => true
+      - else
+        = select_tag 'recipient_id', option_groups_from_collection_for_select(Sys::Department.all, 'users', 'name', 'id', 'name', @filter['recipient_id']), :include_blank => true
+    -#- if @project
+    -#  模块
+    -#  = select_tag 'modu_id', options_from_collection_for_select(@project.modus,'id','name',@filter['modu_id']), :include_blank => true
+    优先级
+    = select_tag 'priority', options_for_select(Task::PRIORITY,@filter['priority']), :include_blank => true
+    - unless action_name=='todo'
+      状态
+      = select_tag 'status',  options_for_select(Task::STATUS,@filter['status']), :include_blank => true
+    评分
+    = select_tag 'work_rank', options_for_select(Task::WORK_RANK,@filter['work_rank']), :include_blank => true
+    概要
+    = text_field_tag 'abstract', @filter['abstract'], :style=>'width:80px;'
+    -#标签
+    -#= text_field_tag 'tag', @filter['tag'], :style=>'width:60px;'
+    排序
+    = select_tag 'sort_by', options_for_select([['分配时间','created_at'],['修改时间','updated_at'],['预计开始','expected_start_on'],['预计完成','expected_finish_on'],['实际开始','actual_start_on'],['实际完成','actual_finish_on']],@filter['sort_by']), :include_blank => true
+    .actions
+      = submit_tag '筛选'
+
+%table.list-table
+  %tr
+    - unless @project
+      %th 项目
+    - unless controller_name=='my_tasks'
+      %th 接收人
+    %th 优先级
+    %th 概要
+    %th 模块
+    %th 问题
+    %th 附件
+    %th 评论
+    %th 预计开始
+    %th 预计完成
+    %th 分配时间
+    %th 状态
+    %th 评分
+    %th
+
+  - dl=7.days.ago
+  - @tasks.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      - unless @project
+        %td{:title=>m.project.name}= link_to m.project.code, project_tasks_path(m.project)
+      - unless controller_name=='my_tasks'
+        %td= m.recipient.name
+      %td{:class => css_class_by_priority(m.priority)}= m.priority_name
+      %td{:title => m.content}= m.abstract
+      %td= m.modu.name if m.modu
+      %td= non_zero(m.issues_count)
+      %td= non_zero(m.attachments_count)
+      %td= non_zero(m.comments_count)
+      %td= m.expected_start_on
+      %td= m.expected_finish_on
+      %td= m.created_at.datetime_ydyn
+      %td{:title => m.work_record, :class => css_class_by_status(m.status)}= m.status_name
+      - if m.completed? and m.ranked?
+        %td{:title =>  m.rank_memo, :class => m.work_rank.nil? ? '' : css_class_by_work_rank(m.work_rank)}= m.work_rank_name
+      - else
+        %td &nbsp;
+      %td
+        - if controller_name=='tasks' or (controller_name=='projects' and (action_name=='tasks' or action_name=='tasks_todo'))
+          = link_to '详细', project_task_path(m.project,m), remote_options
+        -else
+          = link_to '详细', project_my_task_path(m.project,m), remote_options
+        - if @project and m.created_at > dl and @cu.pm?(@project)
+          = link_to '修改', edit_resource_path(m), remote_options
+          - unless m.completed?
+            = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete, :remote => true
+= will_paginate @tasks
+
+- unless controller_name=='my_tasks'
+  - if @project and @cu.pm?(@project)
+    %br
+    = link_to '增加', new_resource_path, remote_options
+

@@ -1,0 +1,53 @@
+%tr
+  %td 提出人:
+  %td= @issue.raised_by.name
+- unless @issue.test.nil?
+  %tr
+    %td 测试:
+    %td= link_to @issue.test.abstract,project_test_path(@issue.project,@issue.test)
+- unless @issue.release.nil?
+  %tr
+    %td 程序版本:
+    %td= @issue.release.version
+%tr
+  %td 系统模块:
+  %td= @issue.modu.name if @issue.modu
+%tr
+  %td 问题类型:
+  %td= @issue.issue_type_name
+%tr
+  %td 紧迫性:
+  %td{:class => css_class_by_urgency(@issue.urgency)}= @issue.urgency_name
+%tr
+  %td 责任人:
+  %td
+    %ul
+      - @issue.liable_people.each do |user|
+        = user.name
+%tr
+  %td 概要:
+  %td= @issue.abstract
+%tr
+  %td 内容:
+  %td
+    %pre= @issue.content
+%tr
+  %td 相关问题
+  %td
+    %ul
+      - @issue.associated_issues.each do |ai|
+        %li
+          = link_to ai.abstract, project_issue_path(@project,ai), remote_options
+          %span.status_tip{:class => css_class_by_status(ai.status)}= ai.status_name
+%tr
+  %td 备注:
+  %td= @issue.memo
+%tr
+  %td 记录人:
+  %td= @issue.registrar.name
+%tr
+  %td 记录时间:
+  %td= resource.created_at.datetime_ydyn
+%tr
+  %td 上次修改:
+  %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at

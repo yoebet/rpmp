@@ -1,0 +1,30 @@
+%h3 附件
+
+%table.list-table
+  %tr
+    %th 所属资源
+    %th 名称
+    %th 类型
+    %th 大小（KB）
+    %th 提交人
+    %th 提交时间
+    %th 标签
+    %th 备注
+    %th
+
+  - @attachments.each do |att|
+    %tr
+      %td= link_to "#{att.subject_type}", "#{project_path(@project)}/#{att.subject_type.downcase.pluralize}/#{att.subject_id}"
+      %td= att.name
+      %td= att.content_type
+      %td= (att.content_size+512) >> 10
+      %td= att.presenter.name if att.presenter
+      %td= att.created_at.datetime_ydyn
+      %td= att.tag
+      %td= att.memo
+      %td(style="text-align:right;")
+        = link_to_function '查看', "view_image(#{att.id},'#{image_project_attachment_path(@project,att)}',#{att.image_width},600)" if att.image?
+        = link_to '下载', download_project_attachment_path(@project,att)
+= will_paginate @attachments
+
+%br

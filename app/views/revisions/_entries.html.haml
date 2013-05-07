@@ -1,0 +1,9 @@
+%ul.revision_entries
+  - action_map=Revision::ACTION_MAP
+  - @entries.each do |m|
+    %li
+      = action_map[m.action]||'修改'
+      %span{:class=>(@filter_path and @filter_path==m.path)? 'found_entry':''}= m.path
+      = link_to_function '查看1', "view_source('#{m.path}',#{m.revision.revision_no})", :class => 'view_source' unless m.action=='D'
+      = link_to_function '查看2', "view_source2('#{m.path}',#{m.id})", :class => 'view_source' unless m.action=='D' or m.kind=='dir'
+      = link_to_function '变更', "diff_revision('#{m.path}',#{m.id})", :class => 'view_source' if m.action=='M'

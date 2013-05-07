@@ -1,0 +1,41 @@
+= form_for @task, :url => @task.new_record? ? collection_path : resource_path(@task), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @task
+  %table
+    - if @cu.pm?(@project)
+      = render 'form_basic', :f => f
+    - else
+      = render 'show_basic'
+
+    %tr
+      %td 附件
+      %td
+        - alter_att = (@task.new_record? || @cu.pm?(@project) || (!@task.ranked? && @task.recipient && @task.recipient.id==@cu.id))
+        - unless @task.new_record?
+          = render 'attachments/attachments', :can_delete => alter_att
+        = render 'attachments/new_attachments'
+    - unless @task.new_record?
+      %tr
+        %td 状态
+        %td= f.select :status, Task::STATUS
+    %tr
+      %td 标签
+      %td= text_field_tag :tags, (resource.tags.map &:name).join(' '), :size => 30
+    - unless @task.status==Const::STATUS_UNRECEIVED
+      %tr
+        %td 任务理解
+        %td= f.text_area :comprehension, :rows => 5
+      %tr
+        %td 实际期限
+        %td
+          = render 'application/date-popup', :field => 'actual_start_on', :f => f
+          至
+          = render 'application/date-popup', :field => 'actual_finish_on', :f => f
+      %tr
+        %td 实际天数
+        %td= f.text_field :approved_days
+      %tr
+        %td 工作记录
+        %td= f.text_area :work_record, :rows => 3
+
+  .actions
+    = f.submit '保存'

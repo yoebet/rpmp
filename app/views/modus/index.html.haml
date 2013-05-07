@@ -1,0 +1,33 @@
+%h3 系统模块
+
+%table.list-table
+  %tr
+    %th 名称
+    %th 说明
+    %th 需求
+    %th 问题
+    %th 任务
+    %th
+
+  - @project.modus.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      %td= m.name
+      %td= m.description
+      %td
+        - unless nil_zero?(m.requirements_count)
+          = link_to m.requirements_count.to_i, project_requirements_path(@project, :modu_id => m.id)
+      %td
+        - unless nil_zero?(m.issues_count)
+          = link_to m.issues_count.to_i, project_issues_path(@project, :modu_id => m.id)
+      %td
+        - unless nil_zero?(m.tasks_count)
+          = link_to m.tasks_count.to_i, project_tasks_path(@project, :modu_id => m.id)
+      %td
+        - if @cu.pm?(@project)
+          = link_to '修改', edit_resource_path(m), remote_options
+          - unless sum_as_int(m.requirements_count,m.issues_count,m.tasks_count) > 3
+            = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete, :remote => true
+%br
+
+- if @cu.pm?(@project)
+  = link_to '增加', new_resource_path, remote_options

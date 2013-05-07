@@ -1,0 +1,36 @@
+<h3>模块</h3>
+
+<%= render :file => 'application/sort-js' %>
+<table class='list-table'>
+  <tr class="head_tr">
+    <th>代码</th>
+    <th>名称</th>
+    <th>说明</th>
+    <th>默认</th>
+    <th>排序</th>
+    <th></th>
+  </tr>
+
+<% @mods.each do |mod| %>
+  <tr id='r_<%= mod.id %>'>
+    <td><%= mod.code %></td>
+    <td><%= mod.name %></td>
+    <td><%= mod.description %></td>
+    <td><%= mod.def_included? ? '是':'否' %></td>
+    <td>
+      <%= link_to_function '↑上移', "move_up(#{mod.id})" %>
+      <%= link_to_function '⤒至顶', "move_top(#{mod.id})" %>
+      <%= link_to_function '↓下移', "move_down(#{mod.id})" %>
+      <%= link_to_function '⤓至底',  "move_bottom(#{mod.id})" %>
+    </td>
+    <td>
+      <%= link_to '修改', edit_resource_path(mod) %>
+      <%= link_to '删除', mod, confirm: '确定要删除吗?', method: :delete %>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to '增加', new_resource_path %>

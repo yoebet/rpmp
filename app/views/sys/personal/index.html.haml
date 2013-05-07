@@ -1,0 +1,16 @@
+%h3 个人信息
+
+%table
+  %tr
+    %td 姓名
+    %td= @cu.name
+  %tr
+    %td 邮箱
+    %td= @cu.email
+  %tr
+    %td 电话
+    %td= @cu.phone
+%br
+%hr
+%b
+  = link_to '我的项目', projects_path

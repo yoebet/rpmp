@@ -1,0 +1,37 @@
+#reply_message{:style=>'display:none;'}
+
+:javascript
+  function reply_message(id){
+    $('#reply_message').load("#{messages_path}/"+id+"/reply",function(){
+      $('#reply_message').dialog('open')
+    })
+  }
+  $(function(){
+    $('#reply_message').dialog({title:'回复',width:390,position:{at:'center+20 center-40'},autoOpen:false})
+    $('#reply_message form').live('ajax:before', function(){
+        return $('#reply_message_content').val()!=''
+    }).live('ajax:success', function(evt, data, status, xhr){
+      if($('#messages').size()>0){
+        var message=$(data)
+        $('#messages').prepend(message)
+        message.effect( 'highlight', {}, 3000 )
+      }else{
+        alert('回复已发送')
+      }
+      var replied_message_id=$('#reply_replied_message_id').val()
+      var $replied_message=$('#rm'+replied_message_id)
+      if($replied_message.find('.replied_tip').size()==0){
+        $replied_message.append('<span class="replied_tip">（已回复）</span>')
+      }
+      $('#reply_message').dialog('close')
+      $('#message').dialog('close')
+    })
+
+    $('#reply_multi_receiver').live('click',function(){
+      if(this.checked){
+        $('#reply_candidates').show()
+      }else{
+        $('#reply_candidates').hide()
+      }
+    })
+  })

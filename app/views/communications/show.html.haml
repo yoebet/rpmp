@@ -1,0 +1,51 @@
+%h3 客户沟通
+
+%table.columns
+  %tr
+    %td 日期:
+    %td= @communication.communicate_on
+  %tr
+    %td 沟通方式:
+    %td= @communication.communicate_type_name
+  %tr
+    %td 客户:
+    %td= @communication.customer.name if @communication.customer
+  %tr
+    %td 概要:
+    %td= @communication.abstract
+  %tr
+    %td 沟通内容:
+    %td
+      %pre= @communication.content
+  %tr
+    %td 备注:
+    %td= @communication.memo
+  %tr
+    %td 已确认:
+    %td= @communication.confirmed ? "是" : "否"
+  %tr
+    %td 记录人:
+    %td= @communication.registrar.name
+  %tr
+    %td 记录时间:
+    %td= resource.created_at.datetime_ydyn
+  %tr
+    %td 上次修改:
+    %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+  %tr
+    %td 附件
+    %td= render 'attachments/attachments'
+
+%br
+= render 'tags/tags'
+
+%br
+= render 'comments/comments'
+
+%br
+= link_to '修改', edit_resource_path(@communication), remote_options
+\|
+= link_to_function '评论', 'new_comment()'
+\|
+= link_to '返回', collection_path, remote_options
+

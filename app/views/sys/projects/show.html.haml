@@ -1,0 +1,31 @@
+%p
+  %b 代号:
+  = @project.code
+%p
+  %b 名称:
+  = @project.name
+%p
+  %b 说明:
+  %pre= @project.description
+%p
+  %b Scm:
+  = @project.scm
+%p
+  %b 重点:
+  = @project.major? ? '是':'否'
+%p
+  %b 不活跃:
+  = @project.inactive? ? '是':'否'
+%p
+  %b= link_to '成员 -> 角色', edit_sys_project_member_roles_path(@project)
+%p
+  %b= link_to '角色 -> 成员', edit_sys_project_role_members_path(@project)
+
+%h4 包含模块
+%ul
+  - @project.mods.each do |mod|
+    %li= mod.name
+
+= link_to '修改', edit_resource_path(@project)
+\|
+= link_to '返回', collection_path

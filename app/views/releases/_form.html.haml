@@ -1,0 +1,34 @@
+= form_for @release, :url => @release.new_record? ? project_releases_path : project_release_path(@project,@release), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @release
+  %table
+    %tr
+      %td 里程碑
+      -if @release.goal
+        %td
+          =link_to @release.goal.abstract, project_goal_path(@project,@release.goal), remote_options
+          =f.hidden_field :goal_id
+      -else
+        - goals=@project.goals.uncompleted
+        - goals << @release.goal unless @release.goal.nil? or goals.include?(@release.goal)
+        %td= f.select :goal_id, options_from_collection_for_select(goals,:id,:abstract)
+    %tr
+      %td 版本号
+      %td= f.text_field :version
+    - unless @release.new_record? 
+      %tr
+        %td 已确认
+        %td{:id=>'confirmed'}
+          = @release.confirmed ? '是' : '否'
+          - if not @release.confirmed and @cu.pm?(@project)
+            = link_to '主管确认', project_release_path(@project,@release)+'/pm_confirm', :method => :post, :remote => true
+    %tr
+      %td 备注
+      %td= f.text_area :memo, :rows => 2
+    %tr
+      %td 附件
+      %td
+        - unless @release.new_record?
+          = render 'attachments/attachments', :can_delete => true, :host => @release
+        = render 'attachments/new_attachments', :host => @release
+  .actions
+    = f.submit '保存'

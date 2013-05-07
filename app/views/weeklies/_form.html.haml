@@ -1,0 +1,49 @@
+%br
+= form_for @weekly, :url => @weekly.new_record? ? collection_path : resource_path(@weekly) do |f|
+  = render 'application/error_messages', :model => @weekly
+
+  %table#weekly.list-table
+    %caption
+      %h3 工作周报
+    %tr
+      %th(width=75) 项目成员
+      %td(width=130)=  @weekly.new_record? ? @cu.name : @weekly.registrar.name
+      %th(width=75) 周末日期
+      %td= render 'application/date-popup', :field => 'weekend', :f => f
+    %tr
+      %th 工作回顾
+      %td.text_area(colspan='3')
+        %pre= f.text_area :review, :rows => 7
+    %tr
+      %th 心得与思考
+      %td.text_area(colspan='3')
+        %pre= f.text_area :thought, :rows => 7
+    %tr
+      %th 下周计划
+      %td.text_area(colspan='3')
+        %pre= f.text_area :plan, :rows => 3
+    %tr
+      %th 备注
+      %td.text_area(colspan='3')
+        %pre= f.text_area :memo, :rows => 1
+
+  %br
+  - unless @weekly.new_record?
+    提交时间:
+    = resource.created_at.datetime_ydyn
+    %br
+    上次修改:
+    = resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+    %br
+    主管确认:
+    %span#confirmed
+      = @weekly.confirmed ? '是' : '否'
+    - if not @weekly.confirmed and @cu.pm?(@project)
+      = link_to '主管确认', project_weekly_path(@project,@weekly)+'/pm_confirm', :method => :post, :remote => true
+    %br
+
+  %br
+  .actions
+    = f.submit '保存'
+  %br
+

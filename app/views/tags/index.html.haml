@@ -1,0 +1,31 @@
+%h3 标签
+
+%table.list-table
+  %tr
+    %th 标签
+    %th 总数
+    %th 文档
+    %th 需求
+    %th 问题
+    %th 任务
+
+  - @tag_statistic.each do |tag|
+    %tr
+      %td= tag['name']
+      %td
+        - unless nil_zero?(tag['TOTAL'])
+          = link_to tag['TOTAL'].to_i, project_tag_path(@project,tag['name']), remote_options
+      %td
+        - unless nil_zero?(tag['documents_count'])
+          = link_to tag['documents_count'].to_i, documents_project_tag_path(@project,tag['name']), remote_options
+      %td
+        - unless nil_zero?(tag['requirements_count'])
+          = link_to tag['requirements_count'].to_i, requirements_project_tag_path(@project,tag['name']), remote_options
+      %td
+        - unless nil_zero?(tag['issues_count'])
+          = link_to tag['issues_count'].to_i, issues_project_tag_path(@project,tag['name']), remote_options
+      %td
+        - unless nil_zero?(tag['tasks_count'])
+          = link_to tag['tasks_count'].to_i, tasks_project_tag_path(@project,tag['name']), remote_options
+
+%br

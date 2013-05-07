@@ -1,0 +1,11 @@
+
+- if @announcement
+  #announcement
+    .an_title= @announcement.title
+    - if @announcement.content_format=='html'
+      .an_content!= @announcement.content
+    - else
+      %pre.an_content<~@announcement.content
+    .an_foots
+      .an_foot=@announcement.inscribe
+      .an_foot=@announcement.inscribe_date.date_zh if @announcement.inscribe_date

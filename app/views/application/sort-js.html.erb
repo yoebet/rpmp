@@ -1,0 +1,20 @@
+<script type="text/javascript">
+function move_up(id){
+  tune_order(id,$('#r_'+id).prev().not('.head_tr'),'up')
+}
+function move_top(id){
+  tune_order(id,$('#r_'+id).parent().find('tr:eq(1)'),'top')
+}
+function move_down(id){
+  tune_order(id,$('#r_'+id).next(),'down')
+}
+function move_bottom(id){
+  tune_order(id,$('#r_'+id).parent().find('tr:last'),'bottom')
+}
+function tune_order(id1,$target_row,dir){
+  if($target_row.length==0)return
+  var id2=$target_row[0].id.substring(2)
+  if(id1==id2)return
+  $.ajax('<%= url_for only_path: false, action: 'tune_order' %>',{type:'post',data:'id1='+id1+'&id2='+id2+'&dir='+dir, dataType:'script'})
+}
+</script>

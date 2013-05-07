@@ -1,0 +1,54 @@
+%h3 项目文档
+
+%table.columns
+  %tr
+    %td 概要:
+    %td= @document.abstract
+  %tr
+    %td 内容:
+    %td
+      %pre= @document.content
+  %tr
+    %td 作者:
+    %td
+      - @document.authors.each do |user|
+        = user.name
+  %tr
+    %td 状态:
+    %td= @document.status_name
+  %tr
+    %td SCM:
+    %td= link_to('最新', @project.scm_project_base + @document.scm_path, :target => '_blank') if @document.scm_path
+  %tr
+    %td 备注:
+    %td= @document.memo
+  %tr
+    %td 提交人:
+    %td= @document.registrar.name
+  %tr
+    %td 提交时间:
+    %td= resource.created_at.datetime_ydyn
+  %tr
+    %td 上次修改:
+    %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+  %tr
+    %td 附件
+    %td= render 'attachments/attachments'
+
+%br
+= render 'tags/tags'
+
+%br
+= render 'comments/comments'
+
+%br
+= link_to history_project_document_path(@project,@document), resource_history_link_options do
+  .title 历史...
+#resource_history
+
+%br
+= link_to '修改', edit_resource_path(@document), remote_options
+\|
+= link_to_function '评论', 'new_comment()'
+\|
+= link_to '返回', collection_path, remote_options

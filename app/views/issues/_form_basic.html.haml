@@ -1,0 +1,53 @@
+- if @issue.test
+  %tr
+    %td 测试
+    %td
+      = link_to @issue.test.abstract,project_test_path(@project,@issue.test), remote_options
+      = f.hidden_field :test_id
+  %tr
+    %td 程序版本
+    %td
+      = @issue.release.version if @issue.release
+      = f.hidden_field :release_id
+- else
+  %tr
+    %td 程序版本
+    %td= f.select :release_id, option_groups_from_collection_for_select(@project.goals,:releases,:version,:id,:version,@issue.release_id), { :include_blank => true }
+%tr
+  %td 系统模块:
+  %td= f.collection_select :modu_id, @project.modus, :id, :name, :include_blank => true
+%tr
+  %td 提出人
+  %td= f.select :raised_by_user, customers_and_members_option_groups(@project.customers,@project.users,@issue.raised_by_user), { :include_blank => true }
+%tr
+  %td 问题类型
+  %td= f.select :issue_type, Issue::ISSUE_TYPE
+%tr
+  %td 紧迫性
+  %td= f.select :urgency, Issue::URGENCY
+- if @cu.pm?(@project)
+  %tr
+    %td 责任人
+    %td
+      .user_candidates
+        - ids=@issue.liable_person_ids
+        - @project.users.each do |user|
+          %div
+            = check_box_tag 'liable_person_ids[]', user.id, ids.include?(user.id), :id => "lp_#{user.id}"
+            = label_tag "lp_#{user.id}", user.name
+%tr
+  %td 概要
+  %td= f.text_field :abstract
+%tr
+  %td 内容
+  %td= f.text_area :content, :rows => 5
+%tr
+  %td 相关问题
+  %td
+    #associated_issues
+      - aip=@issue.new_record? ? associated_project_issues_path(@project) : associated_project_issue_path(@project,@issue)
+      =link_to aip, :remote => true, 'data-type' => 'html', 'data-update' => 'associated_issues' do
+        %span.expand_tip 展开...
+%tr
+  %td 备注
+  %td= f.text_area :memo, :rows => 2

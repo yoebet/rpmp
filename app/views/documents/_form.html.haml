@@ -1,0 +1,38 @@
+= form_for @document, :url => @document.new_record? ? collection_path : resource_path(@document), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @document
+  %table
+    %tr
+      %td 概要
+      %td= f.text_field :abstract
+    %tr
+      %td 内容
+      %td= f.text_area :content, :rows => 5
+    %tr
+      %td 作者
+      %td
+        .user_candidates
+          - ids=@document.author_ids
+          - @project.users.each do |user|
+            %div
+              = check_box_tag 'author_ids[]', user.id, ids.include?(user.id), :id => "author_#{user.id}"
+              = label_tag "author_#{user.id}", user.name
+    %tr
+      %td 状态
+      %td= f.select :status, Document::STATUS
+    %tr
+      %td SCM
+      %td= f.text_field :scm_path
+    %tr
+      %td 备注
+      %td= f.text_area :memo, :rows => 2
+    %tr
+      %td 附件
+      %td
+        - unless @document.new_record?
+          = render 'attachments/attachments', :can_delete => true
+        = render 'attachments/new_attachments'
+    %tr
+      %td 标签
+      %td= text_field_tag :tags, (resource.tags.map &:name).join(' '), :size => 30
+  .actions
+    = f.submit '保存'

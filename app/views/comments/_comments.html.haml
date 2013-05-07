@@ -1,0 +1,7 @@
+#comments_box{:style=>"display:#{resource.comments.any? ? 'block':'none'}"}
+  .title 评论
+  %table#comments
+    - unless resource.respond_to?(:comments_count) && (resource.comments_count.nil? || resource.comments_count.zero?)
+      = render :partial => "comments/comment", :collection => resource.comments
+
+= render 'comments/new_comment'

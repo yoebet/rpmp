@@ -1,0 +1,30 @@
+#new_comment{:style=>'display:none;'}
+  = form_for :comment, :url => project_comments_path(@project), :remote => true do |f|
+    = f.hidden_field :subject_type, :value => resource.class.name
+    = f.hidden_field :subject_id, :value => resource.id
+    %table
+      %col(style='width:30px;')
+      %col(style='width:230px;')
+      %tr
+        %td 标题
+        %td= f.text_field :title, :style => 'width:220px;'
+      %tr
+        %td 内容
+        %td= f.text_area :content, :rows => 5, :style => 'width:220px;'
+      %tr
+        %td
+        %td= f.submit '提交'
+
+:javascript
+  function new_comment(){
+    $('#new_comment').dialog({title:'写评论'})
+  }
+  $('#new_comment form').bind('ajax:before', function(){
+      return $('#comment_content').val()!=''
+  }).bind('ajax:success', function(evt, data, status, xhr){
+    $('#new_comment').dialog('close')
+    $('#comments_box').show()
+    var comment=$(data)
+    $('#comments').append(comment)
+    comment.effect( 'highlight', {}, 3000 )
+  })

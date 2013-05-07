@@ -1,0 +1,12 @@
+- options = {:id=>field,:size=>10,:readonly=>true,:class=>'date'}
+- options.merge!(:ondblclick=>'this.value=""') if defined? can_empty and can_empty
+- if defined? f
+  = f.text_field field,options
+- else
+  = text_field_tag field,v,options
+%img{:id=>"#{field}_trigger",:src=>image_path('calendar.gif'),:style=>"vertical-align:text-bottom;cursor:pointer;"}
+:javascript
+  Calendar.setup({ trigger: "#{field}_trigger",
+    inputField: "#{field}",
+    dateFormat: "%Y-%m-%d",
+    onSelect: function(cal) { cal.hide() } })

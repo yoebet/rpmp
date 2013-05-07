@@ -1,0 +1,11 @@
+= form_for @modu, :url => @modu.new_record? ? collection_path : resource_path(@modu) do |f|
+  = render 'application/error_messages', :model => @modu
+  %table
+    %tr
+      %td 名称
+      %td= f.text_field :name
+    %tr
+      %td 说明
+      %td= f.text_field :description
+  .actions
+    = f.submit '保存'

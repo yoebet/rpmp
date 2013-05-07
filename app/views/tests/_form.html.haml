@@ -1,0 +1,79 @@
+= form_for @test, :url => @test.new_record? ? collection_path : resource_path(@test), :html => {:multipart => true} do |f|
+  = render 'application/error_messages', :model => @test
+  %table
+    %tr
+      %td 程序版本
+      %td= f.select :release_id, option_groups_from_collection_for_select(@project.goals,:releases,:version,:id,:version,@test.release_id), { :include_blank => true }
+    %tr
+      %td 负责人
+      %td= f.collection_select :head_id, @project.users, :id, :name
+    %tr
+      %td 测试人员
+      %td
+        .user_candidates
+          - ids=@test.participant_ids
+          - @project.users.each do |user|
+            %div
+              = check_box_tag 'participant_ids[]', user.id, ids.include?(user.id), :id => "participant_#{user.id}"
+              = label_tag "participant_#{user.id}", user.name
+    %tr
+      %td 概要
+      %td= f.text_field :abstract
+    %tr
+      %td 测试内容
+      %td= f.text_area :content, :rows => 5
+    %tr
+      %td 系统模块
+      %td
+        .mod_candidates
+          - ids=@test.modu_ids
+          - @project.modus.each do |modu|
+            %div
+              = check_box_tag 'modu_ids[]', modu.id, ids.include?(modu.id), :id => "modu_#{modu.id}"
+              = label_tag "modu_#{modu.id}", modu.name
+    %tr
+      %td 测试计划
+      %td= f.text_area :test_plan, :rows => 3
+    %tr
+      %td 相关需求
+      %td
+        %ul
+          - ids=@test.requirements.map &:id
+          - list=@project.requirements.uncompleted.select {|r|not r.original?}
+          - @test.requirements.each {|r| list << r unless list.include?(r)}
+          - list.each do |req|
+            %li
+              = check_box_tag 'requirement_ids[]', req.id, ids.include?(req.id), :id => "requirement_#{req.id}"
+              = label_tag "requirement_#{req.id}", req.abstract
+              = link_to '详情', project_requirement_path(@project,req)
+    %tr
+      %td 附件
+      %td
+        - unless @test.new_record?
+          = render 'attachments/attachments', :can_delete => true
+        = render 'attachments/new_attachments'
+    - unless @test.new_record?
+      %tr
+        %td 过程记录
+        %td= f.text_area :test_record, :rows => 4
+      %tr
+        %td 总结
+        %td= f.text_area :conclusion, :rows => 2
+    %tr
+      %td 状态
+      %td= f.select :status, Test::STATUS
+    %tr
+      %td 备注
+      %td= f.text_area :memo, :rows => 2
+    %tr
+      %td 标签
+      %td= text_field_tag :tags, (resource.tags.map &:name).join(' '), :size => 30
+    - unless @test.new_record?
+      %tr
+        %td 已确认
+        %td{:id=>'confirmed'}
+          = @test.confirmed ? '是' : '否'
+          - if not @test.confirmed and @cu.pm?(@project)
+            = link_to '主管确认', project_test_path(@project,@test)+'/pm_confirm', :method => :post, :remote => true
+  .actions
+    = f.submit '保存'

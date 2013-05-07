@@ -1,0 +1,49 @@
+%h3= @project.name
+
+%p
+  %b 说明:
+  %pre= @project.description
+%p
+  %b SCM:
+  = @project.scm
+
+%p
+  %b
+    = link_to '标签', project_tags_path(@project)
+
+%p
+  %b
+    = link_to '系统模块', project_modus_path(@project)
+
+%p
+  %b
+    = link_to '客户列表', project_customers_path(@project)
+
+%p
+  %b
+    = link_to '成员列表', members_project_path(@project)
+    \|
+    = link_to '成员...', member_roles_project_path(@project), :remote => true, 'data-update' => 'members', 'data-toggle' => 'true'
+#members(style="margin-left: 20px;")
+
+#goals
+  %h4 里程碑:
+  %ul.nestedResource
+    - @project.goals.uncompleted.each do |goal|
+      %li= link_to "#{goal.version},#{goal.abstract}", project_milestone_path(@project,goal)
+
+#requirements
+  %h4
+    未完成的需求:
+    = link_to @project.requirements.uncompleted.count, uncompleted_project_requirements_path(@project)
+  -#%ul.nestedResource
+  -#  - @project.requirements.uncompleted.each do |requirement|
+  -#    %li= link_to requirement.abstract, project_requirement_path(@project,requirement)
+
+#issues
+  %h4
+    未关闭的问题:
+    = link_to @project.issues.unclosed.count, unclosed_project_issues_path(@project)
+  -#%ul.nestedResource
+  -#  - @project.issues.unclosed.each do |issue|
+  -#    %li= link_to issue.abstract, project_issue_path(@project,issue)

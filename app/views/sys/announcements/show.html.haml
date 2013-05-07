@@ -1,0 +1,21 @@
+%h3 公告
+
+-if @announcement
+  #read_users
+    .read_users_tip 已读
+    %table
+      - @announcement.announcement_reads.each do |a|
+        %tr.read_user
+          %td= a.user.name
+          %td= a.created_at.datetime_ydyn
+
+= render 'announcement'
+
+%br
+
+- if @announcement.status==Const::STATUS_UNISSUED
+  = link_to '发布', issue_sys_announcement_path(@announcement), :confirm => '确定要发布吗?', :method => :post
+  \|
+= link_to '修改', edit_resource_path(@announcement)
+\|
+= link_to '返回', collection_path

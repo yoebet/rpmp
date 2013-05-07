@@ -1,0 +1,34 @@
+<h3>部门</h3>
+
+<%= render :file => 'application/sort-js' %>
+<table class='list-table'>
+  <tr class="head_tr">
+    <th>代号</th>
+    <th>名称</th>
+    <th>说明</th>
+    <th>排序</th>
+    <th></th>
+  </tr>
+
+<% @departments.each do |dep| %>
+  <tr id='r_<%= dep.id %>'>
+    <td><%= dep.code %></td>
+    <td><%= dep.name %></td>
+    <td><%= dep.description %></td>
+    <td>
+      <%= link_to_function '↑上移', "move_up(#{dep.id})" %>
+      <%= link_to_function '↓下移', "move_down(#{dep.id})" %>
+    </td>
+    <td>
+      <%= link_to '修改', edit_resource_path(dep) %>
+      <% if dep.users.count==0 %>
+        <%= link_to '删除', dep, confirm: '确定要删除吗?', method: :delete %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to '增加', new_resource_path %>

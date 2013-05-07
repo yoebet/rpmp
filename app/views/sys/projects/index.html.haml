@@ -1,0 +1,34 @@
+%h3
+  项目
+  %span(style="font-size:12px;float:right;")
+    - unless action_name=='inactive'
+      = link_to '不活跃', inactive_sys_projects_path
+
+%table.list-table
+  %tr
+    %th 代号
+    %th 名称
+    %th SCM
+    %th 重点
+    %th 不活跃
+    %th 角色成员
+    %th
+
+  - @projects.each do |project|
+    %tr
+      %td= project.code
+      %td= project.name
+      %td= project.scm
+      %td= project.major? ? '是':''
+      %td= project.inactive? ? '是':''
+      %td
+        = link_to '成员', edit_sys_project_member_roles_path(project)
+        = link_to '角色', edit_sys_project_role_members_path(project)
+      %td
+        = link_to '详细', project
+        = link_to '修改', edit_resource_path(project)
+
+%br
+
+- unless action_name=='inactive'
+  = link_to '增加', new_resource_path

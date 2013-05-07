@@ -1,0 +1,17 @@
+= form_for @config, :url => @config.new_record? ? collection_path : resource_path(@config) do |f|
+  = render 'application/error_messages', :model => @config
+  %table
+    %tr
+      %td= f.label :name, '名称'
+      %td= f.text_field :name
+    %tr
+      %td= f.label :zh_name, '说明'
+      %td= f.text_field :zh_name
+    %tr
+      %td= f.label :value, '配置'
+      %td= f.text_field :value
+    %tr
+      %td= f.label :memo, '备注'
+      %td= f.text_area :memo, :rows => 3
+  .actions
+    = f.submit '保存'

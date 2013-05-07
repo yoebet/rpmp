@@ -1,0 +1,8 @@
+%li{:id=>"m#{message.id}"}
+  = message.created_at.datetime_dyn
+  - names=message.message_receives.map {|r|r.receiver.name}
+  = names.size>3 ? names.first(3).join(',')+'...' : names.join(',')
+  = link_to_function message_title_safe(message), "read_message(#{message.id})"
+  - if message.created_at > 12.hours.ago
+    = link_to "删除",message_path(message), :confirm => "确定要删除吗? 删除后接收者将不再看得到。", :method => :delete, :remote => true, :class => 'op'
+

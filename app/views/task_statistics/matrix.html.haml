@@ -1,0 +1,46 @@
+%h3
+  任务矩阵
+  - if @project
+    %span(style="font-size:12px;")= "（#{@project.code}）"
+  %span(style="font-size:12px;float:right;")
+    - if @project
+      = link_to '任务绩效', ranks_project_task_statistics_path(@project), remote_options
+    - else
+      = link_to '任务绩效', task_ranks_projects_path, remote_options
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    开始日期
+    = render 'application/date-popup', :field => 'date_from', :v => params[:date_from],:can_empty=>true
+    = radio_button_tag :task_term, 'expected', params[:task_term]!='actual'
+    = label_tag :task_term_expected, '按预计期限'
+    &nbsp;
+    = radio_button_tag :task_term, 'actual', params[:task_term]=='actual'
+    = label_tag :task_term_actual, '按实际期限'
+    &nbsp;
+    .actions
+      = submit_tag '生成'
+
+- today=Date.today
+%table.list-table
+  %tr
+    %th(rowspan="2") 人员
+    - @matrix_date_from.step(@furtherest_date) do |date|
+      %th{:class => (date==today)? 'today_task':''}= date.wday_zh
+  %tr
+    - @matrix_date_from.step(@furtherest_date) do |date|
+      %th{:class => (date==today)? 'today_task':''}= date.day
+
+  - @member_tasks.each do |recipient,date_to_tasks|
+    %tr
+      %td= recipient.name
+      - @matrix_date_from.step(@furtherest_date) do |date|
+        - tasks=date_to_tasks[date]
+        - if tasks.size > 0
+          - info=tasks.map {|t|"#{ @project? '' : t.project.code+': ' }#{t.abstract}"}.join("\n")
+          %td{ :title=>info, :class=>"has_task#{(date==today)? ' today_task':''}" }
+            - first_task=tasks.first
+            = link_to tasks.size, project_task_path(first_task.project_id,first_task.id), :target => '_blank'
+        -else
+          %td
+%br

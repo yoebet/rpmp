@@ -1,0 +1,28 @@
+%h3
+  提交统计
+  %span(style="font-size:12px;float:right;")
+    = link_to '详细', project_revisions_path(@project), remote_options
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    开始
+    = render 'application/date-popup', :field => 'date_from', :v => params[:date_from],:can_empty=>true
+    截止
+    = render 'application/date-popup', :field => 'date_to', :v => params[:date_to],:can_empty=>true
+    .actions
+      = submit_tag '统计'
+
+%table.list-table
+  %tr
+    %th 提交人
+    %th RPMP 用户名
+    %th 提交次数
+    %th 平均文件数
+
+  - @member_commits.each do |mc|
+    %tr
+      %td= mc['scm_name']
+      %td= mc['rpmp_name']
+      %td(class="number")= mc['commit_count']
+      %td(class="number")= '%.2f' % mc['avg_entries'] if mc['avg_entries']
+%br

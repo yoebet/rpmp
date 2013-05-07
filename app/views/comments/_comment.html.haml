@@ -1,0 +1,11 @@
+%tr{:id=>"r_#{comment.id}"}
+  %td
+    .comment
+      .commentTitle
+        = comment.title
+      %div{:style => 'clear:both;'}
+        %pre{:style => 'border:none;padding:0;'}= comment.content
+      .foot= comment.user.name
+      .foot= comment.created_at.datetime_ydyn
+  - if comment.created_at > 7.days.ago and (comment.user == @cu or @cu.pm?(@project))
+    %td(style="vertical-align:top;width:30px;")= link_to '删除', project_comment_path(@project,comment), :confirm => '确定要删除吗?', :method => :delete, :remote => true

@@ -1,0 +1,116 @@
+%h3 任务
+
+%table.columns
+  = render 'show_basic'
+
+  %tr
+    %td 附件
+    %td
+      = render 'attachments/attachments'
+  %tr
+    %td 状态:
+    %td{:class => css_class_by_status(@task.status)}= @task.status_name
+  - unless @task.status==Const::STATUS_UNRECEIVED
+    %tr
+      %td 任务理解:
+      %td
+        - unless @task.comprehension.blank?
+          %pre=@task.comprehension
+  - unless @task.status==Const::STATUS_UNRECEIVED
+    %tr
+      %td 实际期限:
+      %td
+        = @task.actual_start_on.date_ydyn_w if @task.actual_start_on
+        = '至' if @task.actual_start_on or @task.actual_finish_on
+        = @task.actual_finish_on.date_ydyn_w if @task.actual_finish_on
+    %tr
+      %td 实际天数:
+      %td= @task.approved_days
+    %tr
+      %td 工作记录:
+      %td
+        - unless @task.work_record.blank?
+          %pre= @task.work_record
+  =render 'rank'
+
+%br
+= render 'tags/tags'
+
+%br
+= render 'comments/comments'
+
+%br
+= link_to history_project_task_path(@project,@task), resource_history_link_options do
+  .title 历史...
+#resource_history
+
+- recipient=@task.recipient
+- if recipient and recipient.id==@cu.id and @task.status==Const::STATUS_UNRECEIVED
+  #receive_task{:style=>'display:none;'}
+    - url= controller_name=='my_tasks' ? receive_project_my_task_path(@project,@task) : receive_project_task_path(@project,@task)
+    = form_for :task, :url => url do |f|
+      =hidden_field_tag :from, 'my_tasks'
+      %div
+        .title 填入以下内容：<br>
+        &nbsp;&nbsp;对任务的理解； 认为的难点；<br>
+        &nbsp;&nbsp;任务完成思路； 任务完成计划；<br>
+        &nbsp;&nbsp;人员配合要求； 其他资源要求
+      %div
+        =f.text_area :comprehension, :rows => 7, :style => 'width:320px;'
+      %div
+        =f.submit '接收'
+
+  :javascript
+    function receive_task(){
+      $('#receive_task').dialog({title:'接收任务',width:350})
+    }
+    $('#receive_task form').bind('submit', function(){
+        return !/^\s*$/.test($('#task_comprehension').val())
+    })
+
+
+- if @task.completed? and @cu.pm?(@project)
+  #rank_task{:style=>'display:none;'}
+    = form_for :task, :url => rank_project_task_path(@project,@task), :remote => true do |f|
+      %table
+        %col(style='width:30px;')
+        %col
+        %tr
+          %td 评分
+          %td
+            - Task::WORK_RANK.each do |label,value|
+              =f.radio_button :work_rank, value
+              =f.label :work_rank, label, :value => value, :class => css_class_by_work_rank(value)
+        %tr
+          %td 备注
+          %td= f.text_area :rank_memo, :cols => 32, :rows => 2
+        %tr
+          %td
+          %td= f.submit '提交'
+
+  :javascript
+    function rank_task(){
+      $('#rank_task').dialog({title:'任务评分',width:360})
+    }
+    $('#rank_task form').bind('ajax:success', function(evt, data, status, xhr){
+      $('#rank_task').dialog('close')
+      $('table.columns tr.task_rank').remove()
+      $('table.columns').append(data)
+    })
+
+%br
+- if flash[:created]
+  = link_to '继续增加', new_resource_path
+- if recipient and recipient.id==@cu.id and @task.status==Const::STATUS_UNRECEIVED
+  = link_to_function '接收任务', 'receive_task()'
+  \|
+- if @cu.pm?(@project) or (recipient and recipient.id==@cu.id and not @task.ranked? and @task.status!=Const::STATUS_UNRECEIVED)
+  = link_to '修改', edit_resource_path(@task), remote_options
+  \|
+- if @task.completed? and @cu.pm?(@project)
+  = link_to_function '评分', 'rank_task()'
+  \|
+= link_to_function '评论', 'new_comment()'
+\|
+
+= link_to '返回', collection_path, remote_options

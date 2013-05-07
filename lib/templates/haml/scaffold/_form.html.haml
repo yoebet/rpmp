@@ -1,0 +1,26 @@
+= form_for @<%= singular_name %>, :url => @<%= singular_name %>.new_record? ? collection_path : resource_path(@<%= singular_name %>) do |f|
+  = render 'application/error_messages', :model => @<%= singular_name %>
+  %table
+<% for attribute in attributes -%>
+<% next if ['project_id','registrar_id'].include?(attribute.name) -%>
+    %tr
+      %td <%= ZhNames::MAP[attribute.name] || attribute.name %>
+<% case attribute.name -%>
+<% when /_on$/ then -%>
+      %td= render 'application/date-popup', :field => '<%=attribute.name%>', :f => f
+<% when 'importance' then -%>
+      %td= f.select :importance, <%=name.classify%>::IMPORTANCE
+<% when 'urgency' then -%>
+      %td= f.select :urgency, <%=name.classify%>::URGENCY
+<% when 'status' then -%>
+      %td= f.select :status, <%=name.classify%>::STATUS
+<% when 'content' then -%>
+      %td= f.text_area :content, :rows => 5
+<% when 'memo' then -%>
+      %td= f.text_area :memo, :rows => 2
+<% else -%>
+      %td= f.<%= attribute.field_type %> :<%= attribute.name %>
+<% end -%>
+<% end -%>
+  .actions
+    = f.submit '<%= ZhNames::MAP['save']  %>'

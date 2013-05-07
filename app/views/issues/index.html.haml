@@ -1,0 +1,70 @@
+%h3
+  问题
+  %span(style="font-size:12px;float:right;")
+    - if @project
+      - if action_name!='unsolved'
+        = link_to '未解决', unsolved_project_issues_path(@project), remote_options
+      - if action_name!='to_test'
+        = link_to '待测试', to_test_project_issues_path(@project), remote_options
+      - if action_name!='index'
+        = link_to '全部', collection_path, remote_options
+      - if action_name!='statistic'
+        = link_to '统计', statistic_project_issues_path(@project), remote_options
+    - else
+      - if action_name!='issues_unsolved'
+        = link_to '未解决', issues_unsolved_projects_path, remote_options
+      - if action_name!='issues_to_test'
+        = link_to '待测试', issues_to_test_projects_path, remote_options
+      - if action_name!='issues'
+        = link_to '全部', issues_projects_path, remote_options
+      - if action_name!='issues_statistic'
+        = link_to '统计', issues_statistic_projects_path, remote_options
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    - if @project
+      模块
+      = select_tag 'modu_id', options_from_collection_for_select(@project.modus,'id','name',@filter['modu_id']), :include_blank => true
+    - else
+      = hidden_field_tag 'modu_id',''
+    问题类型
+    = select_tag 'issue_type', options_for_select(Issue::ISSUE_TYPE,@filter['issue_type']), :include_blank => true
+    紧迫性
+    = select_tag 'urgency', options_for_select(Issue::URGENCY,@filter['urgency']), :include_blank => true
+    - if action_name=='issues' or action_name=='index'
+      状态
+      = select_tag 'status', options_for_select(Issue::STATUS,@filter['status']), :include_blank => true
+    概要
+    = text_field_tag 'abstract', @filter['abstract'], :style=>'width:80px;'
+    标签
+    = text_field_tag 'tag', @filter['tag'], :style=>'width:60px;'
+    .actions
+      = submit_tag '筛选'
+
+%table.list-table
+  %tr
+    - unless @project
+      %th 项目
+    %th 测试
+    = render '/issues/ths'
+    %th
+
+  - dl=7.days.ago
+  - @issues.each do |m|
+    %tr{:id => "r_#{m.id}"}
+      - unless @project
+        %td{:title=>m.project.name}= link_to m.project.code, project_issues_path(m.project)
+      %td= link_to m.test.abstract,project_test_path(m.project,m.test) unless m.test.nil?
+      = render '/issues/tds', :m => m
+      %td
+        = link_to '详细', project_issue_path(m.project,m), remote_options
+        -  if @project and m.created_at > dl and (not m.confirmed or @cu.pm?(@project))
+          = link_to '修改', edit_resource_path(m), remote_options
+          - unless m.status==Const::STATUS_COMPLETED
+            = link_to '删除', resource_path(m), :confirm => '确定要删除吗?', :method => :delete, :remote => true
+= will_paginate @issues
+
+- if @project
+  %br
+  = link_to '增加', new_resource_path, remote_options
+

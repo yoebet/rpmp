@@ -1,0 +1,27 @@
+%h3 修改个人信息
+
+= form_for @cu, :url => personal_update_path do |f|
+  = render 'application/error_messages', :model => @cu
+  %table
+    %tr
+      %td 姓名
+      %td= @cu.name
+    %tr
+      %td 邮箱
+      %td= f.text_field :email
+    %tr
+      %td 电话
+      %td= f.text_field :phone
+    %tr
+      %td 原密码
+      %td= f.password_field :ori_password
+    %tr
+      %td 新密码
+      %td= f.password_field :password
+    %tr
+      %td 确认新密码
+      %td= f.password_field :password_confirmation
+
+  .actions
+    = f.submit '修改'
+

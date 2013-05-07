@@ -1,0 +1,15 @@
+%h3 操作日志
+
+%ul
+  - @logs.each do |m|
+    %li{:id=>"l#{m.id}s#{m.subject_id}"}
+      = m.created_at.datetime_dyn
+      = m.user.name
+      /
+        = m.user_ip
+      = Sys::Log::ACTION_MAP[m.action]||m.action
+      = Sys::Log::SUBJECT_MAP[m.subject_type]||m.subject_type
+      = link_to m.abstract, '#'
+
+= will_paginate @logs
+%br

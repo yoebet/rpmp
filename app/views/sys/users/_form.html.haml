@@ -1,0 +1,117 @@
+= form_for @user, :html => {:onsubmit => 'return confirm_perm()'} do |f|
+  = render 'application/error_messages', :model => @user
+  %table
+    %tr
+      %td 部门
+      %td= f.collection_select :department_id, Sys::Department.all, :id, :name, :include_blank => true
+      %td
+    %tr
+      %td 姓名
+      %td= f.text_field :name
+      %td.field_tip_col 登录名
+    %tr
+      %td svn用户
+      %td= f.text_field :scm_username
+      %td.field_tip_col 未设置则不可见“代码提交”模块
+    %tr
+      %td 邮箱
+      %td= f.text_field :email
+      %td
+    %tr
+      %td 电话
+      %td= f.text_field :phone
+      %td
+    - if @user.new_record?
+      %tr
+        %td 密码
+        %td= f.password_field :password
+        %td
+      %tr
+        %td 确认密码
+        %td= f.password_field :password_confirmation
+        %td
+    - else
+      %tr
+        %td 重置密码
+        %td= f.password_field :password
+        %td.field_tip_col 为空不重置
+      %tr
+        %td 确认重置密码
+        %td= f.password_field :password_confirmation
+        %td.field_tip_col 重置后应勾选“密码必须修改”
+    %tr
+      %td 密码必须修改
+      %td= f.check_box :password_must_update
+      %td
+    %tr
+      %td 所有项目
+      %td= f.check_box :manager
+      %td.field_tip_col 可见所有项目（前台）
+    %tr
+      %td 系统管理员
+      %td= f.check_box :admin
+      %td.field_tip_col 全部前台功能；系统维护
+    - if @cu.root? && !@user.new_record?
+      %tr
+        %td 超级管理员
+        %td= f.check_box :root
+        %td.field_tip_col root
+    %tr
+      %td 用户启用
+      %td= f.check_box :enabled
+      %td
+
+  %br
+
+  .actions
+    = f.submit '保存'
+
+:javascript
+  function confirm_perm(){
+    var user_name=$('#sys_user_name').val()
+
+    #{ @cu.root? ?
+    """var root_checkbox=$('input#sys_user_root')[0]
+    if(root_checkbox){
+      var root_now=root_checkbox.checked
+      #{ @user.root? ? """
+      if(!root_now){
+        if(!confirm('你要取消 '+user_name+' 的超级管理员（root）权限吗？')){
+          return false
+        }
+      }""" :
+      """if(root_now){
+         return confirm('你要设置 '+user_name+' 为超级管理员（root）吗？ （请谨慎操作）')
+       }"""}
+    }""" : ''  }
+
+    var admin_checkbox=$('input#sys_user_admin')[0]
+    if(admin_checkbox){
+      var admin_now=admin_checkbox.checked
+      #{ @user.admin? ?
+      """if(!admin_now){
+        if(!confirm('你要取消 '+user_name+' 的系统管理员权限吗？')){
+          return false
+        }
+      }""" :
+      """if(admin_now){
+        return confirm('你要设置 '+user_name+' 为系统管理员吗？')
+      }"""}
+    }
+
+    var manager_checkbox=$('input#sys_user_manager')[0]
+    if(manager_checkbox){
+      var manager_now=manager_checkbox.checked
+      #{ @user.manager? ?
+      """if(!manager_now){
+        if(!confirm('你要停止让 '+user_name+' 看见所有项目吗？')){
+          return false
+        }
+      }""" :
+      """if(manager_now){
+        return confirm('你要让 '+user_name+' 看见所有项目吗？')
+      }"""}
+    }
+
+    return true
+  }

@@ -1,0 +1,28 @@
+%h3 <%= singular_table_name %>
+
+%table
+<% for attribute in attributes -%>
+<% next if attribute.name == 'project_id' -%>
+  %tr
+    %td <%= ZhNames::MAP[attribute.name] || attribute.human_name %>:
+<% if attribute.name == 'registrar_id' -%>
+    %td= @<%= singular_name %>.registrar.name
+<% elsif ['importance','urgency','status'].include?(attribute.name) -%>
+    %td= @<%= singular_name %>.<%=attribute.name%>_name
+<% elsif  attribute.name == 'confirmed' -%>
+    %td= @<%= singular_name %>.confirmed ? <%=ZhNames::MAP['y:n']%>
+<% else -%>
+    %td= @<%= singular_name %>.<%= attribute.name %>
+<% end -%>
+<% end -%>
+  %tr
+    %td <%=ZhNames::MAP['created_at']%>:
+    %td= resource.created_at.datetime_ydyn
+  %tr
+    %td <%=ZhNames::MAP['updated_at']%>:
+    %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+
+%br
+= link_to '<%=ZhNames::MAP['edit']%>', edit_resource_path(@<%= singular_name %>)
+\|
+= link_to '<%=ZhNames::MAP['return']%>', collection_path

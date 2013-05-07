@@ -1,0 +1,12 @@
+#new_user.user_box
+  = form_tag sys_project_member_roles_path(@project), :method => :post, :remote => true,
+   'data-before' => "new_user", :onsubmit => "$('#new_user').hide()" do
+    = select_tag "user_id", options_from_collection_for_select(@remain_users, "id", "name")
+    .role_candidates
+      - Sys::Role.all.each do |role|
+        %div
+          = check_box_tag 'role_ids[]', role.id, false, :id => "mr_#{role.id}"
+          = label_tag "mr_#{role.id}", role.name
+    .op
+      = submit_tag '保存'
+      = link_to_function '取消', "$('#new_user').empty()"

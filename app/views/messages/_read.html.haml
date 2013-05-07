@@ -1,0 +1,23 @@
+
+#message{:style=>'display:none;'}
+
+:javascript
+  function read_message(id){
+    var messages_cache=$('#message').data('messages_cache')
+    var cached=messages_cache['m'+id]
+    if(cached){
+      $('#message').html(cached)
+      $('#message').dialog('open')
+      return
+    }
+    $('#message').load("#{messages_path}/"+id,function(){
+      $('#rm'+id+' .un_read_message').removeClass('un_read_message')
+      $('#message').dialog('open')
+      messages_cache['m'+id]=$('#message').html()
+    })
+  }
+
+  $(function(){
+    $('#message').dialog({title:'消息',width:390,position:{at:'center-20 center-60'},autoOpen:false})
+    $('#message').data('messages_cache',{})
+  })

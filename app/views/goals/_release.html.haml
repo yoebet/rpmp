@@ -1,0 +1,28 @@
+%div{:id=>"r_#{release.id}"}
+  %table
+    %tr
+      %td 版本号:
+      %td= release.version
+    %tr
+      %td 发布人:
+      %td= release.registrar.name
+    %tr
+      %td 备注:
+      %td= release.memo
+    %tr
+      %td 发布时间:
+      %td= release.created_at.datetime_ydyn
+    %tr
+      %td 上次修改:
+      %td= release.updated_at.datetime_ydyn unless release.updated_at==release.created_at
+    %tr
+      %td 附件
+      %td= render 'attachments/attachments', :att_host => release
+
+  %br
+  - if @cu.pm?(@project) || !release.confirmed
+    = link_to '修改', edit_project_release_path(@project,release), remote_options
+    - if release.created_at > 7.days.ago
+      \|
+      = link_to '删除', project_release_path(@project,release), :confirm => '确定要删除吗?', :method => :delete, :remote => true
+  %hr

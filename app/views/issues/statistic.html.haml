@@ -1,0 +1,29 @@
+%h3
+  问题统计
+  - if @project
+    %span(style="font-size:12px;")= "（#{@project.code}）"
+
+#filterDiv
+  = remote_filter_form_tag do |f|
+    = render 'application/date-popup', :field => 'date_from', :v => params[:date_from],:can_empty=>true
+    至
+    = render 'application/date-popup', :field => 'date_to', :v => params[:date_to],:can_empty=>true
+    .actions
+      = submit_tag '统计'
+
+%table.list-table
+  %tr
+    %th 人员
+    %th 提出问题
+    %th 记录问题
+    %th 解决问题
+    %th 关闭问题
+
+  - @member_issue_counters.each do |(user_id,user_name),counters|
+    %tr{:id => "r_#{user_id}"}
+      %td= user_name
+      %td(class="number")= non_zero(counters['raised'])
+      %td(class="number")= non_zero(counters['registered'])
+      %td(class="number")= non_zero(counters['solved'])
+      %td(class="number")= non_zero(counters['closed'])
+%br

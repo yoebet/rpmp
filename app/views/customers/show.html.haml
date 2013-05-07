@@ -1,0 +1,35 @@
+%h3 客户
+
+%table
+  %tr
+    %td 姓名:
+    %td= @customer.name
+  %tr
+    %td 机构:
+    %td= @customer.organ
+  %tr
+    %td 部门:
+    %td= @customer.department
+  %tr
+    %td 职位:
+    %td= @customer.title
+  %tr
+    %td 电话:
+    %td= @customer.phone
+  %tr
+    %td 邮箱:
+    %td= @customer.email
+  %tr
+    %td 备注:
+    %td= @customer.memo
+  %tr
+    %td 记录时间:
+    %td= resource.created_at.datetime_ydyn
+  %tr
+    %td 上次修改:
+    %td= resource.updated_at.datetime_ydyn unless resource.updated_at==resource.created_at
+
+%br
+= link_to '修改', edit_resource_path(@customer), remote_options
+\|
+= link_to '返回', collection_path, remote_options

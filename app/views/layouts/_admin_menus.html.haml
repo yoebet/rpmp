@@ -1,0 +1,14 @@
+- [%w(部门 departments),
+    %w(用户 users),
+    %w(角色 roles),
+    %w(项目 projects),
+    ['模块', 'mods', true],
+    ['配置', 'configs', true],
+    %w(公告 announcements),
+    %w(备份 dumps),
+    ['日志', 'logs', true],
+    ['控制台', 'console', true]].each do |name,ctrl_name,require_root|
+  - if !require_root || (require_root && @cu.root?)
+    %li
+      - path = send :"sys_#{ctrl_name}_path"
+      = link_to name, path, :class => (controller_name == ctrl_name)? 'currentLink' : ''

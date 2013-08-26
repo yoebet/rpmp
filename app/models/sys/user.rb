@@ -64,15 +64,29 @@ class Sys::User < ActiveRecord::Base
     admin_or_root? || roles_in_project(project).find { |r| r.name=='项目经理' or r.name=='项目副经理' }
   end
 
+  def admin_or_root?
+    self.admin? || self.root?
+  end
+
+  alias_method :administrator?, :admin_or_root?
+
+  # admin or root users
+  def self.administrators
+    where("sysrole & 4 = 4 or sysrole & 8 = 8")
+  end
+
   def self.password_too_simple?(pass)
     return true if pass.size < 4
-    # 1111
-    return true if pass =~ /^(\w)\1+$/
-    chars=pass.chars.to_a
-    # 1212
-    return true if chars.uniq.count < 3
+    # 112233, 123123 => 123
+    pass = pass.gsub /(\w+)\1/, '\1'
+    chars = pass.chars.to_a
+    # 1213
+    return true if chars.uniq.count <= 3
+    cons=chars.each_cons(2)
     # 1234
-    return true if chars.each_cons(2).all? {|a,b|a.succ==b}
+    return true if cons.all? {|a,b|a.succ==b}
+    # 4321
+    return true if cons.all? {|a,b|b.succ==a}
     false
   end
 
@@ -139,12 +153,6 @@ class Sys::User < ActiveRecord::Base
   define_system_role 'admin', 2
 
   define_system_role 'root', 3
-  
-  def admin_or_root?
-    self.admin? || self.root?
-  end
-  
-  public :admin_or_root?
 
   def log_abstract(action)
     if action=='created' || action=='deleted'

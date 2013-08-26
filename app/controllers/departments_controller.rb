@@ -2,7 +2,6 @@
 
 class DepartmentsController < InheritedResources::Base
   defaults :resource_class => Sys::Department
-  actions :ranks
 
   def users
     @department=Sys::Department.find params[:id]

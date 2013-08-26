@@ -1,23 +1,23 @@
 
 html,
 body {
-	height:100%;
+    height:100%;
 }
 
 body {
-	background-color: #f4f8fe;
-	background:url(bg/bg5.jpg) repeat-x fixed;
-	margin:0;
-	padding:0;
-	border:none;
-	font-family:"宋体", Arial;
-	font-size:12px;
+    background-color: #f4f8fe;
+    background:url(bg/bg5.jpg) repeat-x fixed;
+    margin:0;
+    padding:0;
+    border:none;
+    font-family:"宋体", Arial;
+    font-size:12px;
 }
 
 ol, ul {
     font-family: "宋体",verdana, arial, helvetica;
     font-size:   13px;
-	padding:0 3px 5px 10px;
+    padding:0 3px 5px 10px;
     margin:0;
     list-style-type:none;
 }
@@ -57,153 +57,158 @@ a.view_source {
 }
 
 h1 {
-	font-size:26px;
+    font-size:26px;
 }
 
 h2 {
-	font-size:22px;
+    font-size:22px;
 }
 
 h3 {
-	font-size:18px;
+    font-size:18px;
 }
 
 h4 {
-	font-size:14px;
+    font-size:14px;
     margin-top:9px;
     margin-bottom:9px;
 }
 
 h1,h2,h3,h4 {
-	font-family:"微软雅黑", "黑体", "宋体";
+    font-family:"黑体", "宋体";
 }
 
 label {
-	font-weight:bold;
-	cursor:pointer;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+em {
+    font-weight:bold;
+    font-style: normal;
 }
 
 a, .ui-widget-content a {
-	text-decoration:none;
-	color:#086296;
+    text-decoration:none;
+    color:#086296;
 }
 
 a:visited {
-	color: #086296;
+    color: #086296;
 }
 
 a:hover, a:active {
-	color: #CD0000;
+    color: #CD0000;
 }
 
 h1 a,h2 a, h3 a, h4 a {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 h1 a:hover,h2 a:hover, h3 a:hover, h4 a:hover {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 h1 a:active,h2 a:active, h3 a:active, h4 a:active {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 img {
-	border:none;
+    border:none;
 }
 
 hr {
-	border:1px dashed #7490B7;
+    border:1px dashed #7490B7;
 }
 
 .error {
-	color:#f00;
+    color:#f00;
 }
 
 .datetime {
-	width:120px;
+    width:120px;
 }
 
 .text {
-	width:100px;
+    width:100px;
 }
 
 
 .date {
-	width:70px;
+    width:70px;
 }
 
 .showDate {
-	font-size:13px;
-	text-align:left;
+    font-size:13px;
+    text-align:left;
 }
 
 .list-table {
-	border:1px solid #a7c2d5;
-	border-collapse:collapse;
+    border:1px solid #a7c2d5;
+    border-collapse:collapse;
 }
 
 .list-table th {
-	border:1px solid #a7c2d5;
-	text-align:center;
-	height:28px;
-	font-weight:bold;
-	font-family:"微软雅黑", "黑体", "宋体";
-	font-size:14px;
-	background:#6493cb;
-	color:#FFFFFF;
+    border:1px solid #a7c2d5;
+    text-align:center;
+    height:28px;
+    font-weight:bold;
+    font-family:"黑体", "宋体";
+    font-size:14px;
+    background:#6493cb;
+    color:#FFFFFF;
 }
 
 .list-table td {
-	height:28px;
-	padding-left:3px;
-	padding-right:3px;
-	border:1px solid #a7c2d5;
-	background:#fffeff;
-	text-align:left;
-	color:#184276;
+    height:28px;
+    padding-left:3px;
+    padding-right:3px;
+    border:1px solid #a7c2d5;
+    background:#fffeff;
+    text-align:left;
+    color:#184276;
 }
 
 .list-table tr.even td {
-	background:#ebf3fe;
+    background:#ebf3fe;
 }
 
 .list-table tr.highlight a {
-	color: #0862BC;
+    color: #0862BC;
 }
 .list-table .over td a {
-	color:#ffffff;
+    color:#ffffff;
 }
 
 .list-table .op {
-	text-align:center;
+    text-align:center;
 }
 
 .list-table .op a {
-	margin-right:5px;
+    margin-right:5px;
 }
 
 .list-table tfoot tr {
-	line-height:24px;
+    line-height:24px;
 }
 
 .list-table tfoot td {
-	background:#fffeff;
-	font-size:12px;
-	color:#2E2E2E;
-	font-family:Arial;
+    background:#fffeff;
+    font-size:12px;
+    color:#2E2E2E;
+    font-family:Arial;
 }
 
 tr.highlight td {
-	background:#A1D2F0 !important;
-	border-color: white;
-	font-weight:bold;
-	color:#11405e;
-	font-family:"微软雅黑","宋体";
+    background:#A1D2F0 !important;
+    border-color: white;
+    font-weight:bold;
+    color:#11405e;
+    font-family:"宋体";
 }
 
 tr.highlight td a {
-	color:#11405e !important;
+    color:#11405e !important;
 }
 
 form table td {
@@ -216,7 +221,7 @@ table.columns td {
 }
 
 td.number {
-	text-align:right;
+    text-align:right;
 }
 
 table.attachments {
@@ -228,31 +233,31 @@ table.attachments td, #new_attachments div {
 }
 
 .title {
-	font-size:13px;
-	color:hsl(216, 90%, 33%);;
-	font-weight:bold;
+    font-size:13px;
+    color:hsl(216, 90%, 33%);;
+    font-weight:bold;
 }
 
 #contents {
-	margin-top:15px;
-	text-align:center;
-	margin-left:10px;
-	width:720px;
+    margin-top:15px;
+    text-align:center;
+    margin-left:10px;
+    width:720px;
 }
 
 #main {
-	float:left;
-	position:relative;
-	margin-left:-360px;
-	margin-top:20px;
-	left:50%;
-	width:720px;
+    float:left;
+    position:relative;
+    margin-left:-360px;
+    margin-top:20px;
+    left:50%;
+    width:720px;
 }
 
 table tr.caption {
-	background-color:#f3f6fd;
-	line-height:24px;
-	padding:5px;
+    background-color:#f3f6fd;
+    line-height:24px;
+    padding:5px;
 }
 
 .calendar {
@@ -264,49 +269,49 @@ table tr.caption {
 }
 
 .pager {
-	text-align:right;
+    text-align:right;
 }
 
 .pager .nolink {
-	color:#808080;
+    color:#808080;
 }
 
 #head {
-	background: #3579B6;
-	height:77px;
+    background: #3579B6;
+    height:77px;
 }
 
 #banner {
-	background: url(bg/top1.jpg) no-repeat;
-	height:77px;
-	color:#FFFFFF;
+    background: url(bg/top1.jpg) no-repeat;
+    height:77px;
+    color:#FFFFFF;
 }
 
 #banner a {
-	color:#FFFFFF;
+    color:#FFFFFF;
 }
 
 #banner a:visited {
-	color: #FFFFFF;
+    color: #FFFFFF;
 }
 
 #banner a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 div#hrl {
-	height:12px;
-	background-color: #EBF3FE;
-	background:url(bg/bg12.gif) repeat-x;
-	clear:right;
-	margin:0;
-	padding:0;
+    height:12px;
+    background-color: #EBF3FE;
+    background:url(bg/bg12.gif) repeat-x;
+    clear:right;
+    margin:0;
+    padding:0;
 }
 
 
 #banner_major {
     margin: 10px;
-    font: small-caps 30px/30px "微软雅黑", "黑体", "宋体";
+    font: small-caps 30px/30px "黑体", "宋体";
     font-size: 30px;
     clear: both;
     float:left;
@@ -318,43 +323,46 @@ div#hrl {
     padding-top: 8px;
     text-align: left;
     line-height: 20px;
-    font: small-caps 12px/12px "微软雅黑", "黑体", "宋体";
+    font: small-caps 12px/12px "黑体", "宋体";
     font-size: 14px;
     clear: both;
 }
 
 #banner_minor a {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 #bantipc {
-	position:absolute;
-	height:77px;
-	width:300px;
-	right:10px;
+    position:absolute;
+    height:77px;
+    width:300px;
+    right:10px;
 }
 
 #bantipc div {
-	position:absolute;
-	float:right;
-	right:3px;
-	bottom:3px;
-	color: #ffffff;
+    position:absolute;
+    float:right;
+    right:3px;
+    bottom:3px;
+    color: #ffffff;
 }
 
 #floatImgDiv {
-	position:fixed;
-	left:200px;
-	top:100px;
-	border:1px solid #AEC3DE;
-	background-color: #EBF3FE;
-	padding:10px;
-	z-index:3000;
-	color:#0A5E9A;
+    position:fixed;
+    left:200px;
+    top:100px;
+    border:1px solid #AEC3DE;
+    background-color: #EBF3FE;
+    padding:4px 8px;
+    z-index:3000;
+    color:#0A5E9A;
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    border-radius: 0.5em;
 }
 
 #floatImgDiv div {
-	line-height:24px;
+    line-height:24px;
 }
 
 pre {
@@ -372,11 +380,11 @@ table#comments {
 }
 
 table#comments tr:first-child td {
-	border-top:1px dashed #7490B7;
+    border-top:1px dashed #7490B7;
 }
 
 table#comments td {
-	border-bottom:1px dashed #7490B7;
+    border-bottom:1px dashed #7490B7;
 }
 
 .comment {
@@ -405,10 +413,10 @@ table#comments td {
 }
 
 li div {
-	float:left;
-	padding-left:10px;
-	width: 150px;
-	height:30px;
+    float:left;
+    padding-left:10px;
+    width: 150px;
+    height:30px;
 }
 
 fieldset {
@@ -472,19 +480,19 @@ fieldset {
     margin-left:147px;
     margin-right:1em;
     float:left;
-	padding-top:0;
+    padding-top:0;
     padding-left: 1em;
 }
 
 ul#pmenu {
     margin-top:15px;
-	padding-left:10px;
-	padding-right:10px;
-	position:absolute;
-	z-index:1000;
-	width:125px;
-	background:#ebf3fe;
-	border:1px solid #a7c2d5;
+    padding-left:10px;
+    padding-right:10px;
+    position:absolute;
+    z-index:1000;
+    width:125px;
+    background:#ebf3fe;
+    border:1px solid #a7c2d5;
     color:#004ECF;
     line-height: 18px;
     -moz-border-radius: 0.5em;
@@ -497,18 +505,18 @@ ul#pmenu li {
 }
 
 ul#pmenu a {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 ul#pmenu a.currentLink {
-	color: #cd5050;
-	font-weight:bold !important;
+    color: #cd5050;
+    font-weight:bold !important;
 }
 
 ul ul {
-	margin-left:15px;
-	margin-top:0;
-	margin-right:5px;
+    margin-left:15px;
+    margin-top:0;
+    margin-right:5px;
 }
 
 .nestedResource {
@@ -552,7 +560,7 @@ table#weekly td.text_area {
 }
 
 table#weekly tr th:first-child {
-	width:75px;
+    width:75px;
 }
 
 table#weekly td textarea {
@@ -579,62 +587,62 @@ table#weekly td.plan {
 }
 
 input.dateym {
-	width:60px;
+    width:60px;
 }
 
 textarea {
-	border:1px solid #BCBCBC;
-	font-size:12px;
+    border:1px solid #BCBCBC;
+    font-size:12px;
 }
 
 input[type=text], input[type=number], input[type=password]  {
-	border:1px solid #BCBCBC;
-	font-size:13px;
+    border:1px solid #BCBCBC;
+    font-size:13px;
 }
 
 .status_complete, .status_closed {
-	color: green !important;
+    color: green !important;
 }
 
 .status_uncomplete, .status_uncomplete a {
-	color: #e06060 !important;
+    color: #e06060 !important;
 }
 
 .status_to_test, .status_to_test a {
-	color: green !important;
-	background-color: #ffffd6 !important;
+    color: green !important;
+    background-color: #ffffd6 !important;
 }
 
 .status_unreceived {
-	background-color: #FFFF66 !important;
+    background-color: #FFFF66 !important;
 }
 
 .importance_1, .urgency_1, .priority_1 {
-	color: gray !important;
+    color: gray !important;
 }
 
 .importance_2, .urgency_2, .priority_2 {
 }
 
 .importance_3, .urgency_3, .priority_3 {
-	color: #e06060 !important;
+    color: #e06060 !important;
 }
 
 .importance_4, .urgency_4, .priority_4, .current_announcement {
-	color: #d00000 !important;
+    color: #d00000 !important;
 }
 
 .work_rank_0/*unranked*/ {
-	color: gray !important;
+    color: gray !important;
     font-size: 0.9em;
 }
 
 .work_rank_1/*C*/ {
-	color: #d00000 !important;
+    color: #d00000 !important;
     font-weight: bold;
 }
 .work_rank_2/*B*/ {
-	color: #e06060 !important;
+    color: #e06060 !important;
 }
 .work_rank_3/*A*/ {
 }
@@ -815,7 +823,7 @@ td.today_task, th.today_task {
 }
 
 @media print {
-    #filterDiv, .formDiv, form.filter {
+    #filterDiv, form.filter {
          display:none;
      }
     .noprint {

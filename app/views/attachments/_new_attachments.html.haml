@@ -7,7 +7,7 @@
       = text_field_tag 'attachments[][memo]'
       - if defined? attachment_tag
         = hidden_field_tag 'attachments[][tag]',attachment_tag
-      = link_to_function "取消", '$(this).parent().remove()'
+      = link_to_function '取消', '$(this).parent().remove()'
   :javascript
     var atm_tmpl=$('#atmh').remove().html()
   = link_to_function '增加附件', '$("#new_attachments").append(atm_tmpl)'

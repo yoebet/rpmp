@@ -30,6 +30,9 @@ class Sys::Project < ActiveRecord::Base
   has_many :revisions
   has_many :modus
 
+  scope :inactive, ->() { where(:inactive => true) }
+  scope :active, ->() { where('inactive is null or inactive = 0') }
+
   def scm_project_base(wlan=false)
     return self.scm if self.scm[%r{^http://}]
     base=scm_repos_root(wlan)

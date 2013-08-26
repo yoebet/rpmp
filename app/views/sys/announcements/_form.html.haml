@@ -1,4 +1,5 @@
-= form_for @announcement, :url => @announcement.new_record? ? collection_path : resource_path(@announcement) do |f|
+- url = @announcement.new_record? ? collection_path : resource_path(@announcement)
+= form_for @announcement, :url => url, :html => { :id => 'announcement_form' } do |f|
   = render 'application/error_messages', :model => @announcement
   %table
     %tr
@@ -7,12 +8,15 @@
     %tr
       %td 格式
       %td
-        - [['普通','plain'],['html','html']].each do |label,value|
+        - [['普通','plain'],['markdown','markdown'],['textile','textile']].each do |label,value|
           =f.radio_button :content_format, value
           =f.label :content_format, label, :value => value
+        .format_link(style="float:right;")
+          = link_to '预览', preview_sys_announcements_path, :id => 'preview_link', :method => :post, :remote => true
+        #announcement_preview_box(style="position:absolute;display:none;")
     %tr
       %td 公告内容
-      %td= f.text_area :content, :rows => 9, :cols => 70
+      %td= f.text_area :content, :rows => 18, :cols => 110
     %tr
       %td 落款
       %td= f.text_field :inscribe
@@ -35,3 +39,22 @@
 
   .actions
     = f.submit '保存'
+
+:javascript
+  $('#preview_link').bind('ajax:before', function(){
+    var paramsArray=$('#announcement_form').serializeArray()
+    paramsArray=$.grep(paramsArray,function(e){return e.name!=='_method'})
+    var data=$.param(paramsArray)
+    $('#preview_link').data('params',data)
+    return true
+  }).bind('ajax:success',function(evt, data, status, xhr) {
+    $('#announcement_preview_box').html(data).show()
+  })
+  $(document).click(function(e){
+    if($('#announcement_preview_box').is(':hidden')){
+      return
+    }
+    if($(e.target).closest('#announcement_preview_box').length==0){
+      $('#announcement_preview_box').hide()
+    }
+  })

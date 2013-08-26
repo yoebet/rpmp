@@ -14,6 +14,16 @@ class Sys::UsersController < Sys::AdminController
     render 'index'
   end
 
+  def administrators
+    @users=Sys::User.administrators
+    respond_to do |format|
+      format.html { render 'index' }
+      users=@users.collect { |u| {:id => u.id, :name => u.name} }
+      format.xml { render :xml => users }
+      format.json { render :json => users }
+    end
+  end
+
   def new
     @user=Sys::User.new :password_must_update => true
   end

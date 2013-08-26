@@ -13,7 +13,7 @@
         %td= f.text_area :content, :rows => 5, :style => 'width:220px;'
       %tr
         %td
-        %td= f.submit '提交'
+        %td= f.submit '提交', :'data-disable-with' => '提交...'
 
 :javascript
   function new_comment(){

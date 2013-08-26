@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.2.13'
 
-gem 'arel'
+#gem 'arel'
 gem 'mysql2'
 # gem 'sqlite3'
 # gem 'pg'
@@ -39,6 +39,10 @@ gem 'mini_magick'
 
 gem 'haml'
 gem 'haml-rails'
+gem 'haml-contrib'
+
+gem 'rdiscount'
+gem 'RedCloth'
 
 # gem 'mongrel'
 # gem "cgi_multipart_eof_fix"

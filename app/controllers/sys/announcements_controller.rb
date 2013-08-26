@@ -1,10 +1,14 @@
 # -*- encoding : utf-8 -*-
 
 class Sys::AnnouncementsController < Sys::AdminController
-  custom_actions :resource => :issue
+  custom_actions :resource => [:issue,:preview]
 
   def index
     @announcements=Sys::Announcement.paginate(:page => params[:page])
+  end
+
+  def preview
+    build_resource
   end
 
   def create

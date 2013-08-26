@@ -8,21 +8,21 @@ function toggle_image_size(id,type,actual_width,max_width){
 }
 
 function view_image(id,url,actual_width,max_width){
-  var fid = $('#floatImgDiv')
+  var $floatImg = $('#floatImgDiv')
   if($('#floatImgDiv img#floatImg_'+id).length>0){
-    fid.show()
+    $floatImg.show()
   }else {
-    if(fid.length==0){
+    if($floatImg.length==0){
       $('body').append('<div id="floatImgDiv" style="display:none;"></div>')
-        fid =  $('#floatImgDiv')
-        if(fid.draggable)fid.draggable()
+        $floatImg =  $('#floatImgDiv')
+        if($floatImg.draggable)$floatImg.draggable()
       } else{
-        fid.empty()
+        $floatImg.empty()
       }
-      var itonclick=' onclick="toggle_image_size('+id+',1,'+actual_width+','+max_width+'); return false;"'
+      var onclick=' onclick="toggle_image_size('+id+',1,'+actual_width+','+max_width+'); return false;"'
       var html=''
       if(actual_width > max_width) {
-        html+='<div style="float:left;"><a href="#" id="leftImgToggle_'+id+'"'+itonclick+'>原图大小</a></div>'
+        html+='<div style="float:left;"><a href="#" id="leftImgToggle_'+id+'"'+onclick+'>原图大小</a></div>'
       }
       html+='<div style="float:right;"><a href="#" onclick="$(&quot;#floatImgDiv&quot;).hide(); return false;">关闭</a></div>'
       html+='<div style="clear:both;">'
@@ -32,7 +32,7 @@ function view_image(id,url,actual_width,max_width){
       }
       html+=' />'
       html+='</div>'
-      fid.html(html)
-      fid.show()
+      $floatImg.html(html)
+      $floatImg.show()
   }
 }

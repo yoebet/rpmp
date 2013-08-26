@@ -8,9 +8,9 @@
   }
   $(function(){
     $('#reply_message').dialog({title:'回复',width:390,position:{at:'center+20 center-40'},autoOpen:false})
-    $('#reply_message form').live('ajax:before', function(){
+    $(document).on('ajax:before', '#reply_message form', function(){
         return $('#reply_message_content').val()!=''
-    }).live('ajax:success', function(evt, data, status, xhr){
+    }).on('ajax:success', '#reply_message form', function(evt, data, status, xhr){
       if($('#messages').size()>0){
         var message=$(data)
         $('#messages').prepend(message)
@@ -26,8 +26,7 @@
       $('#reply_message').dialog('close')
       $('#message').dialog('close')
     })
-
-    $('#reply_multi_receiver').live('click',function(){
+    $(document).on('click', '#reply_multi_receiver', function(){
       if(this.checked){
         $('#reply_candidates').show()
       }else{

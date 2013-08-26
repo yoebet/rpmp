@@ -6,8 +6,7 @@
     ['配置', 'configs', true],
     %w(公告 announcements),
     %w(备份 dumps),
-    ['日志', 'logs', true],
-    ['控制台', 'console', true]].each do |name,ctrl_name,require_root|
+    ['日志', 'logs', true]].each do |name,ctrl_name,require_root|
   - if !require_root || (require_root && @cu.root?)
     %li
       - path = send :"sys_#{ctrl_name}_path"

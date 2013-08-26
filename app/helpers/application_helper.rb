@@ -52,9 +52,9 @@ module ApplicationHelper
 
   def message_receive_info(message_receive,rtip=false)
     name=message_receive.receiver.name
-	return name unless rtip
-	return name+'<span class="subscript">（未读）</span>' unless message_receive.read
-	return name+'<span class="subscript">（已回复）</span>' if message_receive.replied
+    return name unless rtip
+    return name+'<span class="subscript">（未读）</span>' unless message_receive.read
+    return name+'<span class="subscript">（已回复）</span>' if message_receive.replied
     name
   end
 
@@ -67,7 +67,7 @@ module ApplicationHelper
   end
 
   def remote_form_tag(url_for_options = {}, options = {}, &block)
-    options.merge! remote_options
+    remote_options.merge! options
     form_tag(url_for_options, options, &block)
   end
 
@@ -76,7 +76,7 @@ module ApplicationHelper
     if options[:class]
       options[:class]="filter #{options[:class]}"
     else
-      options[:class]="filter"
+      options[:class]='filter'
     end
     remote_form_tag(url_for_options, options, &block)
   end

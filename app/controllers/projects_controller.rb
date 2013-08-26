@@ -14,7 +14,7 @@ class ProjectsController < ProjectBaseController
   end
 
   def inactive
-    @projects = @cu.visible_projects.where(inactive: true)
+    @projects = @cu.visible_projects.inactive
     render 'index'
   end
 

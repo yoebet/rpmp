@@ -6,7 +6,7 @@ Rpmp::Application.routes.draw do
     root :to => 'admin#facet', as: 'admin_root'
     resources :users do
       collection do
-        get 'all', 'disabled'
+        get 'all', 'disabled', 'administrators'
       end
     end
     resources :departments, :roles, :mods do
@@ -24,6 +24,7 @@ Rpmp::Application.routes.draw do
     end
     resources :announcements do
       post 'issue', :on => :member
+      post 'preview', :on => :collection
     end
     resource :logs, :only => :show
     controller :console, path: 'console', as: 'console' do

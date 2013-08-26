@@ -5,7 +5,9 @@
       %tr
         %td 接收人
         %td
-          - options=options_for_select(Sys::Department.all.map{|d|[d.name,"d#{d.id}"]})+options_from_collection_for_select(@cu.visible_projects, :id, :code)
+          - options = options_for_select(Sys::Department.all.map{|d|[d.name,"d#{d.id}"]})
+          - options << "<option value=\"ad\">（系统管理员）</option>\n".html_safe if @cu.administrator?
+          - options << options_from_collection_for_select(@cu.visible_projects.active, :id, :code)
           = select_tag "categories", options, :include_blank => true
           = select_tag 'receiver_id', option_groups_from_collection_for_select(Sys::Department.all, 'users', 'name', 'id', 'name')
           %div(style="float:right;")
@@ -107,7 +109,9 @@
         return
       }
       var url=''
-      if(/^d.*/.test(cat)){
+      if(/^a.*/.test(cat)){
+        url="#{@cu.administrator? ? administrators_sys_users_path : ''}"
+      }else if(/^d.*/.test(cat)){
         url="#{departments_path()}/"+cat.substr(1)+'/users'
       }else{
         url="#{projects_path()}/"+cat+'/members'
